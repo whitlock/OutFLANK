@@ -76,6 +76,23 @@ fstBarCalculator=function(DataList){
 ## WC FST for infinite sample of diploid allele freqs; without a correction for loacl sample size
 ###########################################  
 
+
+#' 
+#' Calculates FST without correct for local sample sizes. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can someties cause negative estiamtes of FST.)
+#' 
+#' @title FSTNoCorr calcaution for biallelic diploid data
+#'
+#' @param Sample_Mat This is an array with a row for each population, and three values per row: Number of Homozygotes of one type, Nuber of heterozygotes, number of homozygotes of other type.
+#' 
+#' @return Returns a list of values related to FST:
+#'  \itemize{
+#'  \item   He:  the expected heterozygosity of the locus
+#'  \item 	FST:  Fst (without sample size correction)
+#'  \item 	T1: The numerator of the uncorrected sample size correction (similar to Weir and Cockerham 1984)
+#'  \item   T2: The denominator of the uncorrected sample size correction
+#'  }
+#'  @export
+#'  
 WC_FST_FiniteSample_Diploids_2Alleles_NoCorr<-function(Sample_Mat){
   
   #Sample Mat has three columns (homo_p,m heterozygotes, and homo_q) and a row for each population
@@ -108,7 +125,7 @@ WC_FST_FiniteSample_Diploids_2Alleles_NoCorr<-function(Sample_Mat){
   return(list(He=He,FST=FST, T1=a, T2=(a+b+c)))
 }
 
-#############FSt for diploids without local sample size corrections###############
+#############FSt for diploids with local sample size corrections###############
 
 ##########################################
 ## WC FST for infinite sample of diploid allele freqs
