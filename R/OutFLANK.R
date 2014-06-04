@@ -66,7 +66,7 @@
 #source("http://bioconductor.org/biocLite.R")
 #biocLite("qvalue")
 library(qvalue)
-
+source("FST functions.R")
 
 #############FUNCTIONS###################################
  #'
