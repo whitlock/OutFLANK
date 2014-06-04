@@ -1,0 +1,14 @@
+Package: OutFLANK
+Title: Fst outliers with trimming
+Version: 0.1
+Date: 2014-06-03
+Author: Michael C. Whitlock and Katie Lotterhos
+Maintainer: Michael Whitlock <whitlock@zoology.ubc.ca>
+Description: Finds the neutral distribution of Fst via likelihood on a trimmed
+    set of loci
+License: GPL-2
+Depends:
+    qvalue
+Suggests:
+    testthat
+Roxygen: list(wrap = FALSE)
