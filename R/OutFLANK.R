@@ -70,7 +70,7 @@ library(qvalue)
 
 #############FUNCTIONS###################################
  #'
- #'test test testTakes Fst data for a list of loci to find outliers, using a trimmed likelihood approach.
+ #'Takes Fst data for a list of loci to find outliers, using a trimmed likelihood approach.
  #'
  #'This function should take in a dataframe ("FstDataFrame") that 
 #'has columns for $LocusName,$Fst,$T1,$T2,$FstNoCorr, $T1NoCorr, $T2NoCorr,$H. It should return a dataframe 
@@ -116,10 +116,12 @@ library(qvalue)
 #'   \item  numberHighFstOutliers: Number of loci identified as haivng significantly high FST
 #'   \item  results:  a data frame with rows for each locus. This data frame includes all the original columns in the 
 #'                    data set, and four new ones: 
-#'              $indexOrder (the original order of the input data set),
-#'              $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),
-#'              $OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and 
-#'              $q (the q-value for the test of neutrality for the locus)
+#'                    \itemize{
+#'              \item $indexOrder (the original order of the input data set),
+#'              \item $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),
+#'              \item $OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and 
+#'              \item $q (the q-value for the test of neutrality for the locus)
+#'              }
 #'  }
 #'  @export
 
@@ -132,15 +134,15 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
   #This function requires Fst's calculated without sample size correction. These
   #can be calculated, for example, with WC_FST_FiniteSample_Haploids_2AllelesB_NoSamplingCorrection 
   #(in the code below).
-  #
+  
   #This use of the biased FSTs is necessary for the trimming outlier approach 
   #with small samples, because the debiasing sometimes creates negtive Fsts 
   #which do not fit into the chi-square distribution.
-  #
+  
   #This will use FST's calculated without sample size correction for outlier tests.
   #Such FSTs will be biased upwards, but as long as the sample size is similar for
   #all loci, the resulting measures ought to be give similar results.
-  #
+  
   #This use of the biased FSTs is necessary for the trimming outlier approach with
   #small samples, because the debiasing sometimes creates negtive Fsts which do
   #not fit into the chi-square distribution.
