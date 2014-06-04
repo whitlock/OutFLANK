@@ -7,18 +7,19 @@ OutFLANK(FstDataFrame, LeftTrimFraction = 0.05, RightTrimFraction = 0.05,
   Hmin = 0.1, NumberOfSamples, qthreshold = 0.05)
 }
 \arguments{
-\item{FstDataFrame}{A data frame that includes a row for each locus, with columns as follows: $LocusName: a character string that
-                   uniquely names each locus. $FST: Fst calculated for this locus. (Kept here to
-                   report the unbased Fst of the results) $T1: The numerator of the estimator
-                   for Fst (necessary, with $T2, to calculate mean Fst) $T2: The denominator of
-                   the estimator of Fst $FSTNoCorr: Fst calculated for this locus without sample
-                   size correction. (Used to find outliers) $T1NoCorr: The numerator of the
-                   estimator for Fst without sample size correction(necessary, with $T2, to
-                   calculate mean Fst) $T2NoCorr: The denominator of the estimator of Fst
-                   without sample size correction $He: The heterozygosity of the locus (used to
-                   screen out low heterozygosity loci that have a different distribution)
-                   $indexOrder: integer index giving the original order of rows in the input
-                   file.}
+\item{FstDataFrame}{A data frame that includes a row for each locus, with columns as follows:
+                   $LocusName: a character string that uniquely names each locus.
+                   $FST: Fst calculated for this locus. (Kept here to report the unbased Fst of the results)
+                   $T1: The numerator of the estimator for Fst (necessary, with $T2, to calculate mean Fst)
+                   $T2: The denominator of the estimator of Fst
+                   $FSTNoCorr: Fst calculated for this locus without sample
+                   size correction. (Used to find outliers)
+                   $T1NoCorr: The numerator of the estimator for Fst without sample size correction (necessary, with $T2, to
+                   calculate mean Fst)
+                   $T2NoCorr: The denominator of the estimator of Fst
+                   without sample size correction
+                   $He: The heterozygosity of the locus (used to screen out low heterozygosity loci that have a different distribution)
+                   $indexOrder: integer index giving the original order of rows in the input file.}
 
 \item{LeftTrimFraction}{The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood funciton is applied.}
 
@@ -38,11 +39,16 @@ The function returns a list with seven elements:
  \item 	dfInferred: the inferred number of degrees of freedom for the chi-square distribution of neutral FST
   \item  numberLowFstOutliers: Number of loci flagged as having a signficantly low FST (not reliable)
   \item  numberHighFstOutliers: Number of loci identified as haivng significantly high FST
-  \item  results:  a data frame with rows for each locus. This data frame includes all the original columns in the data set, and four new ones: $indexOrder (the original order of the input data set),$GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),$OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and $q (the q-value for the test of neutrality for the locus)
+  \item  results:  a data frame with rows for each locus. This data frame includes all the original columns in the
+                   data set, and four new ones:
+             $indexOrder (the original order of the input data set),
+             $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),
+             $OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and
+             $q (the q-value for the test of neutrality for the locus)
  }
 }
 \description{
-Takes Fst data for a list of loci to find outliers, using a trimmed likelihood approach.
+test test testTakes Fst data for a list of loci to find outliers, using a trimmed likelihood approach.
 }
 \details{
 This function should take in a dataframe ("FstDataFrame") that

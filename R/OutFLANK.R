@@ -70,7 +70,7 @@ library(qvalue)
 
 #############FUNCTIONS###################################
  #'
- #'Takes Fst data for a list of loci to find outliers, using a trimmed likelihood approach.
+ #'test test testTakes Fst data for a list of loci to find outliers, using a trimmed likelihood approach.
  #'
  #'This function should take in a dataframe ("FstDataFrame") that 
 #'has columns for $LocusName,$Fst,$T1,$T2,$FstNoCorr, $T1NoCorr, $T2NoCorr,$H. It should return a dataframe 
@@ -81,18 +81,19 @@ library(qvalue)
 #'
 #'@title Fst outliers with trimming
 #'
-#'@param FstDataFrame A data frame that includes a row for each locus, with columns as follows: $LocusName: a character string that 
-#'                    uniquely names each locus. $FST: Fst calculated for this locus. (Kept here to
-#'                    report the unbased Fst of the results) $T1: The numerator of the estimator 
-#'                    for Fst (necessary, with $T2, to calculate mean Fst) $T2: The denominator of 
-#'                    the estimator of Fst $FSTNoCorr: Fst calculated for this locus without sample
-#'                    size correction. (Used to find outliers) $T1NoCorr: The numerator of the 
-#'                    estimator for Fst without sample size correction(necessary, with $T2, to 
-#'                    calculate mean Fst) $T2NoCorr: The denominator of the estimator of Fst 
-#'                    without sample size correction $He: The heterozygosity of the locus (used to 
-#'                    screen out low heterozygosity loci that have a different distribution) 
-#'                    $indexOrder: integer index giving the original order of rows in the input 
-#'                    file.
+#'@param FstDataFrame A data frame that includes a row for each locus, with columns as follows: 
+#'                    $LocusName: a character string that uniquely names each locus. 
+#'                    $FST: Fst calculated for this locus. (Kept here to report the unbased Fst of the results) 
+#'                    $T1: The numerator of the estimator for Fst (necessary, with $T2, to calculate mean Fst) 
+#'                    $T2: The denominator of the estimator of Fst 
+#'                    $FSTNoCorr: Fst calculated for this locus without sample
+#'                    size correction. (Used to find outliers) 
+#'                    $T1NoCorr: The numerator of the estimator for Fst without sample size correction (necessary, with $T2, to 
+#'                    calculate mean Fst) 
+#'                    $T2NoCorr: The denominator of the estimator of Fst 
+#'                    without sample size correction 
+#'                    $He: The heterozygosity of the locus (used to screen out low heterozygosity loci that have a different distribution) 
+#'                    $indexOrder: integer index giving the original order of rows in the input file.
 #'                    
 #' @param LeftTrimFraction The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood funciton is applied.
 #' 
@@ -113,7 +114,12 @@ library(qvalue)
 #'  \item 	dfInferred: the inferred number of degrees of freedom for the chi-square distribution of neutral FST
 #'   \item  numberLowFstOutliers: Number of loci flagged as having a signficantly low FST (not reliable)
 #'   \item  numberHighFstOutliers: Number of loci identified as haivng significantly high FST
-#'   \item  results:  a data frame with rows for each locus. This data frame includes all the original columns in the data set, and four new ones: $indexOrder (the original order of the input data set),$GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),$OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and $q (the q-value for the test of neutrality for the locus)
+#'   \item  results:  a data frame with rows for each locus. This data frame includes all the original columns in the 
+#'                    data set, and four new ones: 
+#'              $indexOrder (the original order of the input data set),
+#'              $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),
+#'              $OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and 
+#'              $q (the q-value for the test of neutrality for the locus)
 #'  }
 #'  @export
 
@@ -131,26 +137,6 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
   #with small samples, because the debiasing sometimes creates negtive Fsts 
   #which do not fit into the chi-square distribution.
   #
-  #
-  #The meanings of these columns are: $LocusName: a character string that 
-  #uniquely names each locus. $FST: Fst calculated for this locus. (Kept here to
-  #report the unbased Fst of the results) $T1: The numerator of the estimator 
-  #for Fst (necessary, with $T2, to calculate mean Fst) $T2: The denominator of 
-  #the estimator of Fst $FSTNoCorr: Fst calculated for this locus without sample
-  #size correction. (Used to find outliers) $T1NoCorr: The numerator of the 
-  #estimator for Fst without sample size correction(necessary, with $T2, to 
-  #calculate mean Fst) $T2NoCorr: The denominator of the estimator of Fst 
-  #without sample size correction $He: The heterozygosity of the locus (used to 
-  #screen out low heterozygosity loci that have a different distribution) 
-  #$indexOrder: integer index giving the original order of rows in the input 
-  #file
-  #
-  #$OutlierFlag: TRUE if locus is an outlier; FALSE otherwise $qvalues: q-value 
-  #for locus against null hypothesis of neutrality
-  #
-  #"LeftTrimFraction" and "RightTrimFraction" are the fraction of loci that are 
-  #trimmed before fitting the curve to a chi-square distribution.
-  
   #This will use FST's calculated without sample size correction for outlier tests.
   #Such FSTs will be biased upwards, but as long as the sample size is similar for
   #all loci, the resulting measures ought to be give similar results.
@@ -158,6 +144,7 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
   #This use of the biased FSTs is necessary for the trimming outlier approach with
   #small samples, because the debiasing sometimes creates negtive Fsts which do
   #not fit into the chi-square distribution.
+  #
   #
   #Setting up necessary columns in dataframe
   Fstdata= outputDFStarterNoCorr(FstDataFrame,Hmin)
