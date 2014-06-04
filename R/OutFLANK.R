@@ -94,18 +94,20 @@ library(qvalue)
 #'@title Fst outliers with trimming
 #'
 #'@param FstDataFrame A data frame that includes a row for each locus, with columns as follows: 
-#'                    $LocusName: a character string that uniquely names each locus. 
-#'                    $FST: Fst calculated for this locus. (Kept here to report the unbased Fst of the results) 
-#'                    $T1: The numerator of the estimator for Fst (necessary, with $T2, to calculate mean Fst) 
-#'                    $T2: The denominator of the estimator of Fst 
-#'                    $FSTNoCorr: Fst calculated for this locus without sample
+#'\itemize{
+#'                   \item $LocusName: a character string that uniquely names each locus. 
+#'                    \item $FST: Fst calculated for this locus. (Kept here to report the unbased Fst of the results) 
+#'                    \item $T1: The numerator of the estimator for Fst (necessary, with $T2, to calculate mean Fst) 
+#'                    \item $T2: The denominator of the estimator of Fst 
+#'                    \item $FSTNoCorr: Fst calculated for this locus without sample
 #'                    size correction. (Used to find outliers) 
-#'                    $T1NoCorr: The numerator of the estimator for Fst without sample size correction (necessary, with $T2, to 
+#'                    \item $T1NoCorr: The numerator of the estimator for Fst without sample size correction (necessary, with $T2, to 
 #'                    calculate mean Fst) 
-#'                    $T2NoCorr: The denominator of the estimator of Fst 
+#'                    \item $T2NoCorr: The denominator of the estimator of Fst 
 #'                    without sample size correction 
-#'                    $He: The heterozygosity of the locus (used to screen out low heterozygosity loci that have a different distribution) 
-#'                    $indexOrder: integer index giving the original order of rows in the input file.
+#'                    \item $He: The heterozygosity of the locus (used to screen out low heterozygosity loci that have a different distribution) 
+#'                    \item $indexOrder: integer index giving the original order of rows in the input file.
+#'                    }
 #'                    
 #' @param LeftTrimFraction The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood funciton is applied.
 #' 
@@ -254,13 +256,33 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
 }
 
 
-
+#' 
+#' Calculates q-vaues for test of neutrality for a list of loci, using input of an inferred degress of freedo for the chi-square and mean Neutral FST
+#' 
+#' @title q values for test of neutrality
+#'
+#' @param DataList A data frame witha row for each locus, that includes at least a column for $FSTNoCorr. It also helps if there is a column with an identifier for the locus. This dataframe should have empty columns called $qvalues and $OutlierFlag as well.
+#' 
+#'  @param Fstbar Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank 
+#'  
+#'  @param dfInferred The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.
+#'  
+#'  @param qthreshold The threshold False Discovery Rate for calling a locus an outlier ( default = 0.05)
+#'  
+#' @return Returns a data frame with the original data, and two new columns appended:
+#' \itemize {
+#' \item $qvalues the q-value for a locus
+#' \item $OutlierFlag TRUE if q is less than the qthreshold; FALSE otherwise}
+#' 
+#'  @export
+#'  
 pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05){
   #Finds outliers based on chi-squared distribution
   #Takes given values of dfInferred and Fstbar, and returns a list of q-values for all loci based on chi-square.
-  #Assumes that the DataList input has a column called $FST and tat other columns are set up via the
-  # "outputDFStarter" function.
+  #Assumes that the DataList input has a column called $FSTNoCorr and that empty columns exist for $qvalues and $OutlierFlag 
   
+  #
+  #
   #Divide DataList into 3 lists:  DataListGood has $FST>0; DataListNeg has cases where $FST <=0; and
   #   DataListNA has cases where $FST is NA.
   #DataListNeg is necessary to keep separate here because these cases do not have meaningful  results with the chi-square aprach;

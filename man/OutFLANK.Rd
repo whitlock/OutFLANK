@@ -8,18 +8,20 @@ OutFLANK(FstDataFrame, LeftTrimFraction = 0.05, RightTrimFraction = 0.05,
 }
 \arguments{
 \item{FstDataFrame}{A data frame that includes a row for each locus, with columns as follows:
-                   $LocusName: a character string that uniquely names each locus.
-                   $FST: Fst calculated for this locus. (Kept here to report the unbased Fst of the results)
-                   $T1: The numerator of the estimator for Fst (necessary, with $T2, to calculate mean Fst)
-                   $T2: The denominator of the estimator of Fst
-                   $FSTNoCorr: Fst calculated for this locus without sample
+\itemize{
+                  \item $LocusName: a character string that uniquely names each locus.
+                   \item $FST: Fst calculated for this locus. (Kept here to report the unbased Fst of the results)
+                   \item $T1: The numerator of the estimator for Fst (necessary, with $T2, to calculate mean Fst)
+                   \item $T2: The denominator of the estimator of Fst
+                   \item $FSTNoCorr: Fst calculated for this locus without sample
                    size correction. (Used to find outliers)
-                   $T1NoCorr: The numerator of the estimator for Fst without sample size correction (necessary, with $T2, to
+                   \item $T1NoCorr: The numerator of the estimator for Fst without sample size correction (necessary, with $T2, to
                    calculate mean Fst)
-                   $T2NoCorr: The denominator of the estimator of Fst
+                   \item $T2NoCorr: The denominator of the estimator of Fst
                    without sample size correction
-                   $He: The heterozygosity of the locus (used to screen out low heterozygosity loci that have a different distribution)
-                   $indexOrder: integer index giving the original order of rows in the input file.}
+                   \item $He: The heterozygosity of the locus (used to screen out low heterozygosity loci that have a different distribution)
+                   \item $indexOrder: integer index giving the original order of rows in the input file.
+                   }}
 
 \item{LeftTrimFraction}{The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood funciton is applied.}
 

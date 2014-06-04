@@ -6,7 +6,7 @@
 WC_FST_FiniteSample_Diploids_2Alleles_NoCorr(Sample_Mat)
 }
 \arguments{
-\item{Sample_Mat}{This is an array with a row for each population, and three values per row: Number of Homozygotes of one type, Nuber of heterozygotes, number of homozygotes of other type.}
+\item{Sample_Mat}{This is an array with a row for each population, and three values per row: Number of Homozygotes of one type, Number of heterozygotes, number of homozygotes of other type.}
 }
 \value{
 Returns a list of values related to FST:
@@ -18,6 +18,6 @@ Returns a list of values related to FST:
  }
 }
 \description{
-Calculates FST without correct for local sample sizes. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can someties cause negative estiamtes of FST.)
+Calculates FST without correction for local sample sizes, for diploid biallelic data. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can someties cause negative estiamtes of FST.)
 }
 
