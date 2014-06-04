@@ -76,8 +76,20 @@ library(qvalue)
 #'has columns for $LocusName,$Fst,$T1,$T2,$FstNoCorr, $T1NoCorr, $T2NoCorr,$H. It should return a dataframe 
 #'with those same columns but also new columns for $LowOutlierFlag, $HighOutlierFlag,and $q.
 #'
-#'#This function requires Fst's calculated without sample size correction. These
+#'This function requires Fst's calculated without sample size correction. These
 #'can be calculated, for example, with WC_FST_FiniteSample_Haploids_2AllelesB_NoSamplingCorrection in this package.
+#'
+#'This use of the biased FSTs is necessary for the trimming outlier approach 
+#'with small samples, because the debiasing sometimes creates negtive Fsts 
+#'which do not fit into the chi-square distribution.
+
+#'This will use FST's calculated without sample size correction for outlier tests.
+#'Such FSTs will be biased upwards, but as long as the sample size is similar for
+#'all loci, the resulting measures ought to be give similar results.
+
+#'This use of the biased FSTs is necessary for the trimming outlier approach with
+#'small samples, because the debiasing sometimes creates negtive Fsts which do
+#'not fit into the chi-square distribution.
 #'
 #'@title Fst outliers with trimming
 #'
