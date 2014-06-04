@@ -80,7 +80,7 @@ fstBarCalculator=function(DataList){
 #' 
 #' Calculates FST without correct for local sample sizes. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can someties cause negative estiamtes of FST.)
 #' 
-#' @title FSTNoCorr calcaution for biallelic diploid data
+#' @title FSTNoCorr calculation for biallelic diploid data
 #'
 #' @param Sample_Mat This is an array with a row for each population, and three values per row: Number of Homozygotes of one type, Nuber of heterozygotes, number of homozygotes of other type.
 #' 
