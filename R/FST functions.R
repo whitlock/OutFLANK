@@ -1,5 +1,23 @@
 ###### Fst functions for OutFLANK
 
+####### Fst for haploids
+#' 
+#' Calculates FST with correction for local sample sizes, for haploid biallelic data. Based on Weir (1996 - Genetic Data Analysis II)
+#' 
+#' @title FST calculation for biallelic haploid data
+#'
+#' @param AllCounts This is an array with a row for each population, and two values per row: Number of alleles in the sample of one type,  number of alleles of other type.
+#' 
+#' @return Returns a list of values related to FST:
+#'  \itemize{
+#'  \item   He:  the expected heterozygosity of the locus
+#'  \item   p_ave: the average allele frequency
+#'  \item   FST:  Fst (with sample size correction)
+#'  \item   T1: The numerator of the Fst calculation
+#'  \item   T2: The denominator of the Fst calculation
+#'  }
+#'  @export
+#'  
 WC_FST_FiniteSample_Haploids_2AllelesB_MCW<-function(AllCounts){
   #Input a matrix of the counts of each allele (columns) in each population (rows)
   #returns vector instead of list of Fst values, according to Weir
@@ -12,11 +30,11 @@ WC_FST_FiniteSample_Haploids_2AllelesB_MCW<-function(AllCounts){
   n_c = (n_pops*n_ave - sum(sample_sizes^2)/(n_pops*n_ave))/(n_pops-1)  
   p_freqs = counts1/sample_sizes
   p_ave = sum(sample_sizes*p_freqs)/(n_ave*n_pops)
-  #note: this differs slightly from mean(p_freqs) in R
+
   He <- 2*p_ave*(1-p_ave)
   
   s2 = sum(sample_sizes*(p_freqs - p_ave)^2)/((n_pops-1)*n_ave)
-  #note: this differs slightly from var(p_freqs) in R
+
   
   T1 <- s2 - 1/(n_ave-1)*(p_ave*(1-p_ave) -(s2*(r-1)/r))
   T2 <- (n_c - 1)*(p_ave*(1-p_ave))/(n_ave-1) + (1 + (r-1)*(n_ave-n_c)/(n_ave-1))*s2/r
@@ -42,8 +60,8 @@ WC_FST_FiniteSample_Haploids_2AllelesB_MCW<-function(AllCounts){
 #'  \item   HeNoCorr:  the expected heterozygosity of the locus
 #'  \item   p_aveNoCorr: the average allele frequency
 #'  \item   FSTNoCorr:  Fst (without sample size correction)
-#'  \item 	T1NoCorr: The numerator of the uncorrected sample size correction (similar to Weir and Cockerham 1984)
-#'  \item   T2NoCorr: The denominator of the uncorrected sample size correction
+#'  \item 	T1NoCorr: The numerator of the FSTNoCOrr calculation 
+#'  \item   T2NoCorr: The denominator of the FSTNoCOrr calculation
 #'  }
 #'  @export
 #'  
@@ -58,11 +76,11 @@ WC_FST_FiniteSample_Haploids_2AllelesB_NoSamplingCorrection<-function(AllCounts)
   n_c = (n_pops*n_ave - sum(sample_sizes^2)/(n_pops*n_ave))/(n_pops-1)  
   p_freqs = counts1/sample_sizes
   p_ave = sum(sample_sizes*p_freqs)/(n_ave*n_pops)
-  #note: this differs slightly from mean(p_freqs) in R
+
   He <- 2*p_ave*(1-p_ave)
   
   s2 = sum(sample_sizes*(p_freqs - p_ave)^2)/((n_pops-1)*n_ave)
-  #note: this differs slightly from var(p_freqs) in R
+
   
   T1NoCorr <- s2 
   T2NoCorr <- s2/r+(p_ave*(1 - p_ave))
@@ -100,7 +118,7 @@ fstBarCalculator=function(DataList){
 #' 
 #' @title FSTNoCorr calculation for biallelic diploid data
 #'
-#' @param Sample_Mat This is an array with a row for each population, and three values per row: Number of Homozygotes of one type, Number of heterozygotes, number of homozygotes of other type.
+#' @param Sample_Mat This is an array with a row for each population, and three values per row: Number of Homozygotes of one type, number of heterozygotes, number of homozygotes of other type.
 #' 
 #' @return Returns a list of values related to FST:
 #'  \itemize{
@@ -122,14 +140,12 @@ WC_FST_FiniteSample_Diploids_2Alleles_NoCorr<-function(Sample_Mat){
   n_c = (n_pops*n_ave - sum(sample_sizes^2)/(n_pops*n_ave))/(n_pops-1)
   p_freqs = (Sample_Mat[,1] + Sample_Mat[,2]/2) /sample_sizes
   p_ave = sum(sample_sizes*p_freqs)/(n_ave*n_pops)
-  #note: this differs slightly from mean(p_freqs) in R
   s2 = sum(sample_sizes*(p_freqs - p_ave)^2)/((n_pops-1)*n_ave)
-  #note: this differs slightly from var(p_freqs) in R
+
   if(s2==0){return(1); break}  
   
   h_freqs = Sample_Mat[,2]/sample_sizes
   h_ave = sum(sample_sizes*h_freqs)/(n_ave*n_pops)
-  #note: this differs slightly from mean(h_freqs) in R  
   
   a <- n_ave/n_c*(s2)
   
@@ -148,7 +164,22 @@ WC_FST_FiniteSample_Diploids_2Alleles_NoCorr<-function(Sample_Mat){
 ##########################################
 ## WC FST for infinite sample of diploid allele freqs
 ###########################################  
-
+#' 
+#' Calculates FST with correction for local sample sizes, for diploid biallelic data. 
+#' 
+#' @title FST calculation for biallelic diploid data
+#'
+#' @param Sample_Mat This is an array with a row for each population, and three values per row: Number of Homozygotes of one type, number of heterozygotes, number of homozygotes of other type.
+#' 
+#' @return Returns a list of values related to FST:
+#'  \itemize{
+#'  \item   He:  the expected heterozygosity of the locus
+#'  \item   FST:  Fst (with sample size correction)
+#'  \item 	T1: The numerator of the Fst calculation (a from Weir and Cockerham 1984)
+#'  \item   T2NoCorr: The denominator of the Fst calculation (a+b+c from Weir and Cockerham 1984)
+#'  }
+#'  @export
+#' 
 WC_FST_FiniteSample_Diploids_2Alleles<-function(Sample_Mat){
   
   #Sample Mat has three columns (homo_p,m heterozygotes, and homo_q) and a row for each population
@@ -160,14 +191,12 @@ WC_FST_FiniteSample_Diploids_2Alleles<-function(Sample_Mat){
   n_c = (n_pops*n_ave - sum(sample_sizes^2)/(n_pops*n_ave))/(n_pops-1)
   p_freqs = (Sample_Mat[,1] + Sample_Mat[,2]/2) /sample_sizes
   p_ave = sum(sample_sizes*p_freqs)/(n_ave*n_pops)
-  #note: this differs slightly from mean(p_freqs) in R
+
   s2 = sum(sample_sizes*(p_freqs - p_ave)^2)/((n_pops-1)*n_ave)
-  #note: this differs slightly from var(p_freqs) in R
   if(s2==0){return(1); break}	
   
   h_freqs = Sample_Mat[,2]/sample_sizes
   h_ave = sum(sample_sizes*h_freqs)/(n_ave*n_pops)
-  #note: this differs slightly from mean(h_freqs) in R	
   
   a <- n_ave/n_c*(s2 - 1/(n_ave-1)*(p_ave*(1-p_ave)-((r-1)/r)*s2-(1/4)*h_ave))
   

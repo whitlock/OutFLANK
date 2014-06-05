@@ -2,6 +2,8 @@
 
 export(OutFLANK)
 export(OutFLANKResultsPlotter)
+export(WC_FST_FiniteSample_Diploids_2Alleles)
 export(WC_FST_FiniteSample_Diploids_2Alleles_NoCorr)
+export(WC_FST_FiniteSample_Haploids_2AllelesB_MCW)
 export(WC_FST_FiniteSample_Haploids_2AllelesB_NoSamplingCorrection)
 export(pOutlierFinderChiSqNoCorr)

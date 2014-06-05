@@ -6,7 +6,7 @@
 WC_FST_FiniteSample_Diploids_2Alleles_NoCorr(Sample_Mat)
 }
 \arguments{
-\item{Sample_Mat}{This is an array with a row for each population, and three values per row: Number of Homozygotes of one type, Number of heterozygotes, number of homozygotes of other type.}
+\item{Sample_Mat}{This is an array with a row for each population, and three values per row: Number of Homozygotes of one type, number of heterozygotes, number of homozygotes of other type.}
 }
 \value{
 Returns a list of values related to FST:

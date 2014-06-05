@@ -14,8 +14,8 @@ Returns a list of values related to FST:
  \item   HeNoCorr:  the expected heterozygosity of the locus
  \item   p_aveNoCorr: the average allele frequency
  \item   FSTNoCorr:  Fst (without sample size correction)
- \item 	T1NoCorr: The numerator of the uncorrected sample size correction (similar to Weir and Cockerham 1984)
- \item   T2NoCorr: The denominator of the uncorrected sample size correction
+ \item 	T1NoCorr: The numerator of the FSTNoCOrr calculation
+ \item   T2NoCorr: The denominator of the FSTNoCOrr calculation
  }
 }
 \description{

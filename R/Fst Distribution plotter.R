@@ -7,9 +7,9 @@
 #'default, the uncorrected FSTs used by OutFLANK) of loci and overlays the
 #'inferred null histogram.
 #'
-#'#'@title OutFLANKResultsPlotter
+#'#'@title Plot the distributions of Fst from OutFLANK output
 #'
-#'#OFoutput,withOutliers = TRUE, NoCorr= TRUE, Hmin=0.1, binwidth=0.005, Zoom = FALSE,RightZoomFraction = 0.05,titletext=NULL)
+#'
 #'@param OFoutput The output of the function OutFLANK() 
 #
 #' @param withOutliers Determines whether the loci marked as outliers (with $OutlierFlag) are included in the histogram.
@@ -24,12 +24,13 @@
 #' 
 #' @param RightZoomFraction Used when Zoom = TRUE. Defines the proportion of the distribution to plot.
 #' 
-#' @param titletext Allows a test string to be printed as a title onthe graph
+#' @param titletext Allows a test string to be printed as a title on the graph
 #' 
 #' @return
 #' 
 #' The function returns a plot, containing a histogram of Fst with the inferred neutral distribution superimposed.
 #' 
+#' See the read me file at github.
 #'  @export
 
 OutFLANKResultsPlotter = function(OFoutput,withOutliers = TRUE, NoCorr= TRUE, Hmin=0.1, binwidth=0.005, Zoom = FALSE,RightZoomFraction = 0.05,titletext=NULL){
@@ -152,7 +153,3 @@ OutFLANKBadCurvePlotter = function(badDF,OFoutput,withOutliers = TRUE, NoCorr= T
   
 }
 
-DistributionPlotForTalks = function(badDF,OFoutput,withOutliers = TRUE, NoCorr= TRUE, Hmin=0.1, binwidth=0.005, Zoom = FALSE,RightZoomFraction = 1,titletext=NULL){
-  OutFLANKResultsPlotter(OFoutput=OFoutput,withOutliers=T,NoCorr=T,Hmin=Hmin,binwidth=binwidth,Zoom=Zoom,RightZoomFraction=RightZoomFraction,titletext=titletext)
-  OutFLANKBadCurvePlotter(badDF=badDF,OFoutput=OFoutput,withOutliers=T,NoCorr=T,Hmin=Hmin,binwidth=binwidth,Zoom=Zoom,RightZoomFraction=RightZoomFraction)
-}
