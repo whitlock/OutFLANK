@@ -49,7 +49,7 @@ WC_FST_FiniteSample_Haploids_2AllelesB_MCW<-function(AllCounts){
 #####therefore creates a biased estimate of Fst that does not go negative.
 
 #' 
-#' Calculates FST without correction for local sample sizes, for haploid biallelic data. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can someties cause negative estiamtes of FST.)
+#' Calculates FST without correction for local sample sizes, for haploid biallelic data. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can sometimes cause negative estimates of FST.)
 #' 
 #' @title FSTNoCorr calculation for biallelic haploid data
 #'
@@ -114,7 +114,7 @@ fstBarCalculator=function(DataList){
 
 
 #' 
-#' Calculates FST without correction for local sample sizes, for diploid biallelic data. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can someties cause negative estiamtes of FST.)
+#' Calculates FST without correction for local sample sizes, for diploid biallelic data. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can sometimes cause negative estimates of FST.)
 #' 
 #' @title FSTNoCorr calculation for biallelic diploid data
 #'

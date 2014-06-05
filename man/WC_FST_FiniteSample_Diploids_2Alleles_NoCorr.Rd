@@ -18,6 +18,6 @@ Returns a list of values related to FST:
  }
 }
 \description{
-Calculates FST without correction for local sample sizes, for diploid biallelic data. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can someties cause negative estiamtes of FST.)
+Calculates FST without correction for local sample sizes, for diploid biallelic data. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can sometimes cause negative estimates of FST.)
 }
 
