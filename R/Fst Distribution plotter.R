@@ -1,10 +1,65 @@
 ####  Plotting functions fr Fst distributions after OutFLANK
+##### OutFLANKResultsPlotter #### 
 
-# may require histStack from geneplotter package:
-# source("http://bioconductor.org/biocLite.R")
-# biocLite("geneplotter")
-# library(geneplotter)
 
+#'This function takes the output of OutFLANK as
+#'input with the OFoutput parameter.  It plots a histogram of the FST (by
+#'default, the uncorrected FSTs used by OutFLANK) of loci and overlays the
+#'inferred null histogram.
+#'
+#'#'@title OutFLANKResultsPlotter
+#'
+#'#OFoutput,withOutliers = TRUE, NoCorr= TRUE, Hmin=0.1, binwidth=0.005, Zoom = FALSE,RightZoomFraction = 0.05,titletext=NULL)
+#'@param OFoutput The output of the function OutFLANK() 
+#
+#' @param withOutliers Determines whether the loci marked as outliers (with $OutlierFlag) are included in the histogram.
+#' 
+#' @param NoCorr Plots the distribution of FSTNoCorr when TRUE. Recommended, because this is the data used by OutFLANK to infer the distribution.
+#' 
+#' @param Hmin The minimum heterozygosity required before including  a locus in the plot.
+#' 
+#' @param binwidth The width of bins in the histogram.
+#' 
+#' @param Zoom If Zoom is set to TRUE, then the graph will zoom in on the right tail of the distirbution (based on argument RightZoomFraction)
+#' 
+#' @param RightZoomFraction Used when Zoom = TRUE. Defines the proportion of the distribution to plot.
+#' 
+#' @param titletext Allows a test string to be printed as a title onthe graph
+#' 
+#' @return
+#' 
+#' The function returns a plot, containing a histogram of Fst with the inferred neutral distribution superimposed.
+#' 
+#'  @export
+
+OutFLANKResultsPlotter = function(OFoutput,withOutliers = TRUE, NoCorr= TRUE, Hmin=0.1, binwidth=0.005, Zoom = FALSE,RightZoomFraction = 0.05,titletext=NULL){
+  data=OFoutput$results[which(OFoutput$results$He>Hmin),]
+  if(NoCorr) {
+    flist=data$FSTNoCorr
+    fbar=sum(data$T1NoCorr)/sum(data$T2NoCorr)
+    titletext= paste(c(titletext,"Fst without sample size correction"))
+  }
+  
+  if(!NoCorr) {
+    flist=data$FST
+    fbar=OFoutput$FSTbar
+    
+    titletext= paste(c(titletext,"Fst with sample size correction"))
+  }
+  
+  flist = flist[which(!is.na(flist))]
+  keeperlist=which(!data$OutlierFlag)
+  
+  
+  if(!withOutliers) flist = flist[keeperlist]
+  
+  if(Zoom) {FstDistPlotterZoom(df = OFoutput$dfInferred, FSTlist  = flist,  FSTbar = fbar, binwidth,titletext, RightZoomFraction)} else {
+    FstDistPlotter(df = OFoutput$dfInferred, FSTlist = flist,  FSTbar = fbar, binwidth, titletext = titletext)}
+  
+}
+
+
+################################
 
 FstDistPlotter = function(df, FSTlist, FSTbar, binwidth=0.005,titletext=NULL){
   xPlotUpperBound=ceiling(max(FSTlist)*100)/100
@@ -72,38 +127,7 @@ FstDistPlotterAddBadCurve = function(df, FSTlist,  FSTbar, binwidth = 0.005, Rig
   
 }
 
-##### OutFLANKResultsPlotter #### 
 
-#This function takes the output of OutFLANK as
-#input with the OFoutput parameter.  It plots a histogram of the FST (by
-#default, the uncorrected FSTs used by OutFLANK) of loci and overlays the
-#inferred null histogram.
-
-OutFLANKResultsPlotter = function(OFoutput,withOutliers = TRUE, NoCorr= TRUE, Hmin=0.1, binwidth=0.005, Zoom = FALSE,RightZoomFraction = 0.05,titletext=NULL){
-  data=OFoutput$results[which(OFoutput$results$He>Hmin),]
-  if(NoCorr) {
-    flist=data$FSTNoCorr
-    fbar=sum(data$T1NoCorr)/sum(data$T2NoCorr)
-    titletext= paste(c(titletext,"Fst without sample size correction"))
-  }
-  
-  if(!NoCorr) {
-    flist=data$FST
-    fbar=OFoutput$FSTbar
-    
-    titletext= paste(c(titletext,"Fst with sample size correction"))
-  }
-  
-  flist = flist[which(!is.na(flist))]
-  keeperlist=which(!data$OutlierFlag)
-  
-  
-  if(!withOutliers) flist = flist[keeperlist]
-  
-  if(Zoom) {FstDistPlotterZoom(df = OFoutput$dfInferred, FSTlist  = flist,  FSTbar = fbar, binwidth,titletext, RightZoomFraction)} else {
-  FstDistPlotter(df = OFoutput$dfInferred, FSTlist = flist,  FSTbar = fbar, binwidth, titletext = titletext)}
- 
-}
 #  OutFLANKBadCurvePlotter draws a curve based on the same Fstbar but with soe differnet degrees of freedom
 OutFLANKBadCurvePlotter = function(badDF,OFoutput,withOutliers = TRUE, NoCorr= TRUE, Hmin=0.1, binwidth=0.005, Zoom = FALSE,RightZoomFraction = 0.99,titletext=NULL){
   data=OFoutput$results[which(OFoutput$results$He>Hmin),]

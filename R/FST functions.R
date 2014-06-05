@@ -105,9 +105,9 @@ fstBarCalculator=function(DataList){
 #' @return Returns a list of values related to FST:
 #'  \itemize{
 #'  \item   He:  the expected heterozygosity of the locus
-#'  \item 	FST:  Fst (without sample size correction)
-#'  \item 	T1: The numerator of the uncorrected sample size correction (similar to Weir and Cockerham 1984)
-#'  \item   T2: The denominator of the uncorrected sample size correction
+#'  \item 	FSTNoCorr:  Fst (without sample size correction)
+#'  \item 	T1NoCorr: The numerator of the uncorrected sample size correction (similar to Weir and Cockerham 1984)
+#'  \item   T2NoCorr: The denominator of the uncorrected sample size correction
 #'  }
 #'  @export
 #'  
@@ -140,7 +140,7 @@ WC_FST_FiniteSample_Diploids_2Alleles_NoCorr<-function(Sample_Mat){
   He <- 1-sum(p_ave^2, (1-p_ave)^2)
   
   FST <- a/(a+b+c) 
-  return(list(He=He,FST=FST, T1=a, T2=(a+b+c)))
+  return(list(He=He,FSTNoCorr=FST, T1NoCorr=a, T2NoCorr=(a+b+c)))
 }
 
 #############FSt for diploids with local sample size corrections###############
