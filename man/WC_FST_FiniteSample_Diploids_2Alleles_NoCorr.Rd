@@ -12,9 +12,9 @@ WC_FST_FiniteSample_Diploids_2Alleles_NoCorr(Sample_Mat)
 Returns a list of values related to FST:
  \itemize{
  \item   He:  the expected heterozygosity of the locus
- \item 	FST:  Fst (without sample size correction)
- \item 	T1: The numerator of the uncorrected sample size correction (similar to Weir and Cockerham 1984)
- \item   T2: The denominator of the uncorrected sample size correction
+ \item 	FSTNoCorr:  Fst (without sample size correction)
+ \item 	T1NoCorr: The numerator of the uncorrected sample size correction (similar to Weir and Cockerham 1984)
+ \item   T2NoCorr: The denominator of the uncorrected sample size correction
  }
 }
 \description{
