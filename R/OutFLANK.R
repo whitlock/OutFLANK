@@ -135,6 +135,7 @@ library(qvalue)
 #'              \item $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),
 #'              \item $OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and 
 #'              \item $q (the q-value for the test of neutrality for the locus)
+#'              \item $pvalues (the p-value for the test of neutrality for the locus)
 #'              }
 #'  }
 #'  @export
@@ -252,7 +253,7 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
   OutlierFlag=ifelse(is.na(FstDataFrame$FSTNoCorr),NA,FALSE)
   qvalues=rep(NA,len)
   pvalues=rep(NA,len)
-  cbind(FstDataFrame, indexOrder, GoodH, qvalues,OutlierFlag )
+  cbind(FstDataFrame, indexOrder, GoodH, qvalues,pvalues,OutlierFlag )
   
 }
 
