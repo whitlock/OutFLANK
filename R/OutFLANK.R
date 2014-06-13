@@ -251,6 +251,7 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
   GoodH=ifelse(FstDataFrame$He<Hmin,"lowH","goodH")
   OutlierFlag=ifelse(is.na(FstDataFrame$FSTNoCorr),NA,FALSE)
   qvalues=rep(NA,len)
+  pvalues=rep(NA,len)
   cbind(FstDataFrame, indexOrder, GoodH, qvalues,OutlierFlag )
   
 }
@@ -278,7 +279,7 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
 #'  
 pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05){
   #Finds outliers based on chi-squared distribution
-  #Takes given values of dfInferred and Fstbar, and returns a list of q-values for all loci based on chi-square.
+  #Takes given values of dfInferred and Fstbar, and returns a list of p-values and q-values for all loci based on chi-square.
   #Assumes that the DataList input has a column called $FSTNoCorr and that empty columns exist for $qvalues and $OutlierFlag 
   
   #
@@ -299,6 +300,7 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   qtemp=qvalue(pList,fdr.level=qthreshold,pi0.method="bootstrap")
   #Note:  Using the bootstrap method here seems OK, but if this causes problems remove the pi0.method="bootstrap" in the previous line to revert to the default.
   
+  DataListGood$pvalues=pList
   DataListGood$qvalues=qtemp$qvalues
   DataListGood$OutlierFlag=qtemp$significant
   rbind(DataListGood,DataListNonPosFst,DataListNA) 
