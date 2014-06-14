@@ -48,6 +48,7 @@ The function returns a list with seven elements:
              \item $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),
              \item $OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and
              \item $q (the q-value for the test of neutrality for the locus)
+             \item $pvalues (the p-value for the test of neutrality for the locus)
              }
  }
 }

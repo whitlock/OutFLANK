@@ -253,6 +253,7 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
   OutlierFlag=ifelse(is.na(FstDataFrame$FSTNoCorr),NA,FALSE)
   qvalues=rep(NA,len)
   pvalues=rep(NA,len)
+  pvaluesRightTail=rep(NA,len)
   cbind(FstDataFrame, indexOrder, GoodH, qvalues,pvalues,OutlierFlag )
   
 }
@@ -297,11 +298,14 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   
   
   pList=pTwoSidedFromChiSq(DataListGood$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
+  pListRightTail=1-pchisq(DataListGood$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
   
-  qtemp=qvalue(pList,fdr.level=qthreshold,pi0.method="bootstrap")
+  #Note: Change made 13 June 2014; q-values now only calcualted on right-tail one-sided p-values
+  qtemp=qvalue(pListRightTail,fdr.level=qthreshold,pi0.method="bootstrap")
   #Note:  Using the bootstrap method here seems OK, but if this causes problems remove the pi0.method="bootstrap" in the previous line to revert to the default.
   
   DataListGood$pvalues=pList
+  DataListGood$pvaluesRightTail=pListRightTail
   DataListGood$qvalues=qtemp$qvalues
   DataListGood$OutlierFlag=qtemp$significant
   rbind(DataListGood,DataListNonPosFst,DataListNA) 
