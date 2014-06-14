@@ -254,7 +254,7 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
   qvalues=rep(NA,len)
   pvalues=rep(NA,len)
   pvaluesRightTail=rep(NA,len)
-  cbind(FstDataFrame, indexOrder, GoodH, qvalues,pvalues,OutlierFlag )
+  cbind(FstDataFrame, indexOrder, GoodH, qvalues,pvalues,pvaluesRightTail,OutlierFlag )
   
 }
 
