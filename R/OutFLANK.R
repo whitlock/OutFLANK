@@ -136,6 +136,7 @@ library(qvalue)
 #'              \item $OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and 
 #'              \item $q (the q-value for the test of neutrality for the locus)
 #'              \item $pvalues (the p-value for the test of neutrality for the locus)
+#'              \item $pvaluesRightTail the one-sided (right tail) p-value for a locus
 #'              }
 #'  }
 #'  @export
@@ -275,7 +276,9 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
 #' @return Returns a data frame with the original data, and two new columns appended:
 #' \itemize {
 #' \item $qvalues the q-value for a locus
-#' \item $OutlierFlag TRUE if q is less than the qthreshold; FALSE otherwise}
+#' \item $OutlierFlag TRUE if q is less than the qthreshold; FALSE otherwise
+#' \item $pvalues the p-value for a locus
+#' \item $pvaluesRightTail the one-sided (right tail) p-value for a locus}
 #' 
 #'  @export
 #'  
