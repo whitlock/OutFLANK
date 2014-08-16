@@ -5,11 +5,11 @@
 ########################How to use OutFLANK##################
 
 #This method looks for Fst outliers from a list of Fst's for different loci. It
-#assumes that each locus has been genotyped in all populations.
+#assumes that each locus has been genotyped in all populations with approximately equal coverage. test
 
-#OutFLANK estimates the distribution of Fst based on a trimmed sample of Fst. It
+#OutFLANK estimates the distribution of Fst based on a trimmed sample of Fst's. It
 #assumes that the majority of loci in the center of the distribution are
-#neutral, and infers the shape of the distribution of neutral Fst using a trimmed set of
+#neutral and infers the shape of the distribution of neutral Fst using a trimmed set of
 #loci. Loci with the highest and lowest Fst's are trimmed from the data set
 #before this inference, and the distribution of Fst df/(mean Fst)  is assumed to
 #follow a chi-square distribution. Based on this inferred distribution, each
