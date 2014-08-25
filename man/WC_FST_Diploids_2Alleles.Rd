@@ -11,14 +11,14 @@ WC_FST_Diploids_2Alleles(Sample_Mat)
 \value{
 Returns a list of values related to FST:
  \itemize{
- \item   He:  the expected heterozygosity of the locus
+ \item   He:  The expected heterozygosity of the locus
  \item   FST:  Fst (with sample size correction)
  \item   T1: The numerator of the Fst calculation
  \item   T2: The denominator of the Fst calculation
  \item   FSTNoCorr:  Fst (without sample size correction)
  \item   T1NoCorr: The numerator of the Fst calculation without sample size correction
  \item   T2NoCorr: The denominator of the Fst calculation without sample size correction
- \item   meanAlleleFreq: the mean allele frequency over all populations for this locus
+ \item   meanAlleleFreq: The mean allele frequency over all populations for this locus
  }
 }
 \description{
