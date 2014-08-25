@@ -5,7 +5,7 @@
 ########################How to use OutFLANK##################
 
 #This method looks for Fst outliers from a list of Fst's for different loci. It
-#assumes that each locus has been genotyped in all populations with approximately equal coverage. test
+#assumes that each locus has been genotyped in all populations with approximately equal coverage. 
 
 #OutFLANK estimates the distribution of Fst based on a trimmed sample of Fst's. It
 #assumes that the majority of loci in the center of the distribution are
