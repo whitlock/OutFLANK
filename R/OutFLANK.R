@@ -261,7 +261,7 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
 
 
 #' 
-#' Calculates q-vaues for test of neutrality for a list of loci, using input of an inferred degress of freedo for the chi-square and mean Neutral FST
+#' Calculates q-values for test of neutrality for a list of loci, using input of an inferred degress of freedo for the chi-square and mean Neutral FST
 #' 
 #' @title q values for test of neutrality
 #'
