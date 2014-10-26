@@ -54,8 +54,13 @@
 
 # This results dataframe includes all of the input data, plus the following three columns:
 #     $indexOrder: integer index giving the original order of rows in the input file
-#     $OutlierFlag: TRUE if locus is an outlier; FALSE otherwise 
+#     $GoodH: TRUE if the hetereozygosity is above the threshold set; FALS otherwise
 #     $qvalues: q-value for locus against null hypothesis of neutrality
+#     $pvalues: p-value for locus against null hypothesis of neutrality
+#     $pvaluesRightTail: p-value for locus against null hypothesis of neutrality, based only on the right tail
+#     $OutlierFlag: TRUE if locus is an outlier; FALSE otherwise 
+
+
 
 
 #############LOAD NECESSARY PACAKAGES############# 

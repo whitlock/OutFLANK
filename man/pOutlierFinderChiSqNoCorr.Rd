@@ -23,6 +23,6 @@ Returns a data frame with the original data, and two new columns appended:
 \item $pvaluesRightTail the one-sided (right tail) p-value for a locus}
 }
 \description{
-Calculates q-vaues for test of neutrality for a list of loci, using input of an inferred degress of freedo for the chi-square and mean Neutral FST
+Calculates q-values for test of neutrality for a list of loci, using input of an inferred degress of freedo for the chi-square and mean Neutral FST
 }
 
