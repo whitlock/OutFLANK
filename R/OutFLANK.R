@@ -52,7 +52,7 @@
 #     $results:   a data frame with information about each locus
 
 
-# This results dataframe includes all of the input data, plus the following three columns:
+# This results dataframe includes all of the input data, plus the following columns:
 #     $indexOrder: integer index giving the original order of rows in the input file
 #     $GoodH: TRUE if the hetereozygosity is above the threshold set; FALS otherwise
 #     $qvalues: q-value for locus against null hypothesis of neutrality
@@ -111,7 +111,6 @@ library(qvalue)
 #'                    \item $T2NoCorr: The denominator of the estimator of Fst 
 #'                    without sample size correction 
 #'                    \item $He: The heterozygosity of the locus (used to screen out low heterozygosity loci that have a different distribution) 
-#'                    \item $indexOrder: integer index giving the original order of rows in the input file.
 #'                    }
 #'                    
 #' @param LeftTrimFraction The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood funciton is applied.
@@ -133,8 +132,8 @@ library(qvalue)
 #'  \item 	dfInferred: the inferred number of degrees of freedom for the chi-square distribution of neutral FST
 #'   \item  numberLowFstOutliers: Number of loci flagged as having a signficantly low FST (not reliable)
 #'   \item  numberHighFstOutliers: Number of loci identified as haivng significantly high FST
-#'   \item  results:  a data frame with rows for each locus. This data frame includes all the original columns in the 
-#'                    data set, and four new ones: 
+#'   \item  results:  a data frame with a row for each locus. This data frame includes all the original columns in the 
+#'                    data set, and six new ones: 
 #'                    \itemize{
 #'              \item $indexOrder (the original order of the input data set),
 #'              \item $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),
