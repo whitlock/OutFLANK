@@ -101,7 +101,7 @@ MakeDiploidFSTMat = function(SNPmat,locusNames,popNames){
   FSTmat <- matrix(NA, nrow=nloci, ncol=8)
   for (i in 1:nloci){
     FSTmat[i,]=unlist(getFSTs_diploids(popname,SNPmat[,i]))
-    if (i==10000){print(paste(i, "done of", nloci))}
+    if (i%%10000==0){print(paste(i, "done of", nloci))}
   }
   outTemp=as.data.frame(FSTmat)
   outTemp = cbind(locusname,outTemp)
