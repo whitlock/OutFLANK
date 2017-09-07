@@ -5,3 +5,5 @@ A procedure to find Fst outliers based on an inferred distribution of neutral Fs
 
 
  A fuller description of how to use OutFLANK is given in "OutFLANK readme.pdf" available at github.com/whitlock/OutFLANK.
+
+An extensive tutorial can be found at http://rpubs.com/lotterhos/outflank
