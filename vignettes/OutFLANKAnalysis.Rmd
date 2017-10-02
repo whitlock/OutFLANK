@@ -4,19 +4,18 @@
 
 ## Packages and Data ##
 ```{r}
-#devtools::install_github("privefl/bigsnpr")
+if (!("devtools" %in% installed.packages())){install.packages(devtools)}
+library(devtools)
+if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
+if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
+if (!("qvalue" %in% installed.packages())){TODO}
+if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK", ref="development")}
+
+devtools::install_github("privefl/bigsnpr")
 library(OutFLANK)  # outflank package
 library(bigsnpr)   # package for LD pruning
 library(bigstatsr) # package for LD pruning 
-library(pcadapt)
 
-cic_rds<-readRDS("cichlid_data/cichlid.rds") # Note setwd and change path accordingly
-cic_met<-read.csv("cichlid_data/cichlid_sample_metadata.csv") # Note setwd and change path accordingly
-
-cic_rds$chromosome_int<-as.integer(as.factor(cic_rds$chromosome))
-SNPdata <- t(cic_rds$G)
-locinames <- paste(as.integer(cic_rds$fishing_pressure), cic_rds$position, sep="_")
-locinames_update <- data.frame(a = cic_rds$chromosome_int, b = cic_rds$position)
 ```
 
 
