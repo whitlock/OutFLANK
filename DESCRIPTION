@@ -12,3 +12,5 @@ Depends:
 Suggests:
     testthat
 Roxygen: list(wrap = FALSE)
+LazyData: TRUE
+RoxygenNote: 6.0.1
