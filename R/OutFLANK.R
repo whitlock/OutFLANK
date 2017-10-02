@@ -54,7 +54,7 @@
 
 # This results dataframe includes all of the input data, plus the following columns:
 #     $indexOrder: integer index giving the original order of rows in the input file
-#     $GoodH: TRUE if the hetereozygosity is above the threshold set; FALS otherwise
+#     $GoodH: TRUE if the heterozygosity is above the threshold set; FALS otherwise
 #     $qvalues: q-value for locus against null hypothesis of neutrality
 #     $pvalues: p-value for locus against null hypothesis of neutrality
 #     $pvaluesRightTail: p-value for locus against null hypothesis of neutrality, based only on the right tail
@@ -128,7 +128,7 @@ library(qvalue)
 #' The function returns a list with seven elements:
 #' \itemize{
 #'  \item   FSTbar: the mean FST inferred from loci not marked as outliers 
-#'  \item 	FSTNoCorrbar: the mean FST (not corrected for sample size -gives an upwardly biased estimate of FST)
+#'  \item 	FSTNoCorrbar: the mean FST (not corrected for sample size---gives an upwardly biased estimate of FST)
 #'  \item 	dfInferred: the inferred number of degrees of freedom for the chi-square distribution of neutral FST
 #'   \item  numberLowFstOutliers: Number of loci flagged as having a signficantly low FST (not reliable)
 #'   \item  numberHighFstOutliers: Number of loci identified as haivng significantly high FST
@@ -203,7 +203,7 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
     #### chi-square approach on their own)
     if(any(workingDataFrame$OutlierFlag[workingDataFrame$FSTNoCorr<LowTrimPoint])) workingDataFrame$OutlierFlag[workingDataFrame$FSTNoCorr<0]=TRUE
     
-    ####Any loci previously marked as $OutlierFlag=TRUE remain so, even if the new iteration doesn''t flag them as outliers
+    ####Any loci previously marked as $OutlierFlag=TRUE remain so, even if the new iteration doesn't flag them as outliers
     #     workingDataFrame$OutlierFlag=!as.logical((!workingDataFrame$OutlierFlag)*(!oldOutlierFlag))
     
     #Resetting neutral list, and checking whether the outlier list has stabilized
@@ -295,7 +295,7 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   #
   #Divide DataList into 3 lists:  DataListGood has $FST>0; DataListNeg has cases where $FST <=0; and
   #   DataListNA has cases where $FST is NA.
-  #DataListNeg is necessary to keep separate here because these cases do not have meaningful  results with the chi-square aprach;
+  #DataListNeg is necessary to keep separate here because these cases do not have meaningful results with the chi-square approach;
   #   however, they do carry information.
   
   DataListGood=DataList[which(DataList$FSTNoCorr>0),]
