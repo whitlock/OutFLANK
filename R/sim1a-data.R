@@ -1,9 +1,8 @@
-#' Arabidopsis QTL data on gravitropism
+#' Simulated genome data
 #'
-#' Data from a QTL experiment on gravitropism in
-#' Arabidopsis, with data on 162 recombinant inbred lines (Ler x
-#' Cvi). The outcome is the root tip angle (in degrees) at two-minute
-#' increments over eight hours.
+#' Data from a simulation with 6 linkage groups.
+#' Two linkage groups are neutral, two have regions of low recombination, 
+#' and two are neutral.
 #'
 #' @docType data
 #'
