@@ -155,8 +155,10 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
 
   
   #making working dataframe with real Fst (no NAs), storing NAs to add back later
-  workingDataFrame=Fstdata[which(!is.na(Fstdata$FSTNoCorr)),]
-  storedDataFrameNA=Fstdata[which(is.na(Fstdata$FSTNoCorr)),]
+ # next line is new (to screen for Hemin), and the two lines after that have been edited as well.
+  nonkeepers = which((!is.na(Fstdata$FSTNoCorr))||(Fstdata$He<Hmin))
+  workingDataFrame=Fstdata[which(!nonkeepers),]
+  storedDataFrameNA=Fstdata[which(nonkeepers),]
   
   
   #Finding upper and lower bounds for trimming (eliminating NAs, but not negative FSTs)
