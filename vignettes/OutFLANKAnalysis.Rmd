@@ -1,0 +1,143 @@
+### OutFLANK Vignette
+
+# 2017-10-02
+
+We've put this tutorial together to illustrate best practices when using OutFLANK:
+
+* One good practice is to check for loci with small samples sizes (which may result in loci that deviate between `FST` and the uncorrected FST used in the OurFLANK algorithm `FSTNoCorr`). 
+
+* The updated version of OutFLANK (v XXX) correctly removes loci with low heterozygosity in the OutFLANK function. The original version (`OutFLANK_0.1`) did not do this correctly, so please make sure you are using the correct version (use `sessionInfo` to check). Loci with low H do not follow the assumptions and should be ignored.
+
+* Another good practice using a set of SNPs from the genome that is random or that is pruned for linkage disequilibrium (LD) to calculate mean FST (`FSTbar`) and the degrees of freedom on the chi-square distribution (`df`). We have found (with real and simulated whole-genome data) that non-random representation of loci (such as from regions in which many loci display the same signal, such as in regions of low recombination or in regions of extensive sweep signals) can cause the FST distribution to no longer follow the chi-squared expectation. Here, we illustrate how to use a subset of quasi-independent SNPs to estimate `FSTbar` and `df`, and then how to use these estimates to calculate $P$-values for a much larger set of SNPs.
+
+
+## Packages and Data ##
+```{r}
+if (!("devtools" %in% installed.packages())){install.packages(devtools)}
+library(devtools)
+if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
+if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
+if (!("qvalue" %in% installed.packages())){TODO}
+if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
+if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} 
+
+devtools::install_github("whitlock/OutFLANK", ref="development") # will need to DELETE this link for final .Rmd!
+library(OutFLANK)  # outflank package
+library(vcfR)
+library(bigsnpr)   # package for LD pruning
+library(bigstatsr) # package for LD pruning 
+```
+
+## Load the data
+This dataset was used as a data challenge for a workshop for genome scans. More information about the workshop can be found here: https://github.com/bcm-uga/SSMPG2017
+
+```{r}
+data("sim1a")
+str(sim1a)
+data(muts)
+
+# Sample sizes of individuals within populations
+table(sim1a$pop)
+```
+
+The population was simulated to spatially heterogeneous selection, and 1000 individuals were collected from across 39 populations (`sim1a$pop`) spanning the environmental gradient (`sim1a$envi`). 
+The dataset consists of 5,940 SNPs simulated across 6 linkage groups. 
+
+Each linkage group was 40,000 bases long. Quantitative trait nucleotides (QTNs) were allowed to evolve in the 1st and 3rd linkage groups and contributed additively to a trait under stabilizing selection. The vertical BLACK lines in the above graph illustrate the locations of QTNs, and the width is proportional (wider vertical lines are loci that explain a larger proportion of the genetic variance in the trait under selection). If you would like to learn more about the QTNs you can find this information in `data(muts)`. Here we have plotted FST and highlighted the loci that are identified as outlier by OutFLANK with red circles (spoiler alert).
+
+![simulated genome]("data/sims.png")
+
+The 2nd and 6th linkage group had regions of low recombination (shown in red). The 4th linkage group was neutral. The 5th linkage group had a selected sweep that occure so far in the past, that it didn't leave any characteristic signature in the genome (vertical PURPLE line).
+
+There are many low heterozygosity loci (e.g., rare alleles) in the dataset, which have not been filtered out.
+
+
+## Calculate FST on the data
+
+The object `sim1a$G` contains the genotypes (in rows) for the 1000 individuals (in columns). See the OutFLANK readme for information on the data format. Some users have had errors because they have not coded missing data correctly. Here, we have to transpose the G matrix to get it into OutFLANK format.
+
+First, we calculate FST on all the loci in our dataset.
+
+```{r}
+my_fst <- MakeDiploidFSTMat(t(sim1a$G), locusNames = sim1a$position, popNames = sim1a$pop)
+```
+
+
+## Data checks: Heterozygosity vs. FST
+Here, you can see how some of the low H loci have high FST. These are all neutral loci in the simulation, and this is why the are excluded from the OutFLANK algorithm.
+```{r}
+plot(my_fst$He, my_fst$FST)
+```
+
+## Data checks: FST vs. FSTNoCorr
+To fit the FST distribution to chi-square, we use the FST uncorrected for sample size (`FSTNoCorr`). This is a valid approach as long as all loci have equal sample sizes within populations. The effect of correcting for sample size will make the corrected FST estimate lower than the uncorrected FST estimate. If a locus has a much lower sample size compared to the rest, it could have a much larger FSTNoCorr than FST (and therefore incorrectly inferred as an outlier). Look for deviations from this relationship in this plot, and remove those loci.
+
+```{r}
+plot(my_fst$FST, my_fst$FSTNoCorr)
+```
+
+## Data prep: prune SNPs for LD
+
+Before doing running the OutFLANK() function to estimate the parameters on the neutral FST distribution, you will want to identify a quasi-random set of SNPs. Here, we show you how to prune whole-genome data for LD. This code will move along windows in the genome and remove any SNPs that have a correlation of greater than 0.2 with each other. Note that your chromosome needs to be of class `integer` for this to work.
+
+```{r LD pruning}
+#### LD Pruning ####
+G<-add_code256(big_copy(t(sim1a$G),type="raw"),code=bigsnpr:::CODE_012)
+newpc<-snp_autoSVD(G=G,infos.chr =sim1a$chromosome,infos.pos = sim1a$position)
+which_pruned <- attr(newpc, which="subset") # Indexes of remaining SNPS after pruning
+length(which_pruned)
+```
+Our pruned SNP set is a couple thousand SNPs fewer than our full dataset.
+
+
+## OutFLANK analysis with pruned quasi-independent set of SNPs
+
+Next, you can run the `OutFLANK()` function to estimate the parameters on the neutral FST distribution.
+```{r}
+#### Evaluating OutFLANK with pruned data ####
+out_trim <- OutFLANK(my_fst[which_pruned,], NumberOfSamples=39, qthreshold = 0.05)
+head(out_trim$results)
+```
+
+Check the fit and make sure it looks good, especially in the right tail:
+```{r}
+OutFLANKResultsPlotter(out_trim, withOutliers = TRUE,
+                       NoCorr = TRUE, Hmin = 0.1, binwidth = 0.001, Zoom =
+                         FALSE, RightZoomFraction = 0.05, titletext = NULL)
+
+## Zoom in on right tail
+OutFLANKResultsPlotter(out_trim , withOutliers = TRUE,
+                       NoCorr = TRUE, Hmin = 0.1, binwidth = 0.001, Zoom =
+                         TRUE, RightZoomFraction = 0.15, titletext = NULL)
+```
+
+### Also check the P-value histogram:
+
+Here, we plot the "right-tailed" P-values, which means that outliers in the right tail of the FST distribution will have a P-value near zero. Because we ran the algorithm on a pruned set of SNPs, this will remove some of the signal around selected sites. So we expect this histogram to be flat and maybe have a bump near 0 for selected sites. This histogram looks pretty good.
+```{r}
+hist(out_trim$results$pvaluesRightTail)
+```
+
+## Using estimated netural mean FST and df to calculate P-values for all loci
+
+Now that we've estimated neutral mean FST and df to a quasi-independent set of SNPs, we can go back and calculate P-values for all the loci in our dataset. 
+
+```{r}
+P_all <- pOutlierFinderChiSqNoCorr(my_fst, Fstbar = out_trim$FSTbar, 
+                                   dfInferred = out_trim$dfInferred, qthreshold = 0.05)
+head(P_all)
+```
+
+## Highlight outliers on Manhattan Plot
+```{r}
+
+
+```
+
+
+
+## Bonus: Convert VCF to OutFLANK format
+On GitHub at whilock/OutFLANK/data, you can download a vcf file of the simulations.
+```{r}
+read.vcfR("data/sim1a.vcf.gz")
+```
