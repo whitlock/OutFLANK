@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 ### OutFLANK Vignette
 
 # 2017-10-02
@@ -19,9 +24,9 @@ if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bi
 if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
 if (!("qvalue" %in% installed.packages())){TODO}
 if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
-if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} 
+#if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} 
 
-devtools::install_github("whitlock/OutFLANK", ref="development") # will need to DELETE this link for final .Rmd!
+devtools::install_github("whitlock/OutFLANK", ref="development", force=TRUE) # will need to DELETE this link for final .Rmd!
 library(OutFLANK)  # outflank package
 library(vcfR)
 library(bigsnpr)   # package for LD pruning
@@ -137,7 +142,11 @@ head(P_all)
 
 
 ## Bonus: Convert VCF to OutFLANK format
-On GitHub at whilock/OutFLANK/data, you can download a vcf file of the simulations.
+
+On GitHub at whilock/OutFLANK/data, you can download a vcf file of the simulations. Here is a simple script to convert a vcf file into OutFLANK format. 
+
+DISCLAIMER: Note that this dataset does not include missing data, so it may not work in all scenarios. Also, NA should be replaced with "9" to work with the functions in the package.
+
 ```{r}
-read.vcfR("data/sim1a.vcf.gz")
+my_vcf <- read.vcfR("data/sim1a.vcf.gz")
 ```
