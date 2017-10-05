@@ -18,7 +18,6 @@ Returns a list of values related to FST:
  \item 	T1NoCorr: The numerator of the FSTNoCOrr calculation 
  \item   T2NoCorr: The denominator of the FSTNoCOrr calculation
  }
- @export
 }
 \description{
 Calculates FST without correction for local sample sizes, for haploid biallelic data. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can sometimes cause negative estimates of FST.)

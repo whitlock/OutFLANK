@@ -18,7 +18,6 @@ Returns a list of values related to FST:
  \item   T1: The numerator of the Fst calculation
  \item   T2: The denominator of the Fst calculation
  }
- @export
 }
 \description{
 Calculates FST with correction for local sample sizes, for haploid biallelic data. Based on Weir (1996 - Genetic Data Analysis II)

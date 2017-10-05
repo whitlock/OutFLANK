@@ -52,7 +52,6 @@ The function returns a list with seven elements:
              \item $pvaluesRightTail the one-sided (right tail) p-value for a locus
              }
  }
- @export
 }
 \description{
 Takes Fst data for a list of loci to find outliers, using a trimmed likelihood approach.

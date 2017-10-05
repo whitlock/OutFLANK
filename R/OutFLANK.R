@@ -143,9 +143,8 @@ library(qvalue)
 #'              \item $pvaluesRightTail the one-sided (right tail) p-value for a locus
 #'              }
 #'  }
-#'  @export
-
-
+#'@export
+#'  
 OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, Hmin=0.1, NumberOfSamples, qthreshold=0.05){
   
   #
@@ -280,14 +279,15 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
 #'  @param qthreshold The threshold False Discovery Rate for calling a locus an outlier ( default = 0.05)
 #'  
 #' @return Returns a data frame with the original data, and two new columns appended:
-#' \itemize {
+#' \itemize{
 #' \item $qvalues the q-value for a locus
 #' \item $OutlierFlag TRUE if q is less than the qthreshold; FALSE otherwise
 #' \item $pvalues the p-value for a locus
-#' \item $pvaluesRightTail the one-sided (right tail) p-value for a locus}
+#' \item $pvaluesRightTail the one-sided (right tail) p-value for a locus
+#' }
 #' 
-#'  @export
-#'  
+#'@export
+#'
 pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05){
   #Finds outliers based on chi-squared distribution
   #Takes given values of dfInferred and Fstbar, and returns a list of p-values and q-values for all loci based on chi-square.

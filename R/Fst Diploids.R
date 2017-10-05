@@ -19,7 +19,7 @@
 #'  \item   T2NoCorr: The denominator of the Fst calculation without sample size correction
 #'  \item   meanAlleleFreq: The mean allele frequency over all populations for this locus
 #'  }
-#'  @export
+#'@export
 #'  
 WC_FST_Diploids_2Alleles<-function(Sample_Mat){
   ##Calculate both Fst and Fst NoCorr at the same time, from WC84
@@ -70,7 +70,7 @@ WC_FST_Diploids_2Alleles<-function(Sample_Mat){
 #' 
 #' @return Returns a data frame in the form needed for the main OutFLANK function.
 #' 
-#' @export
+#'@export
 #'  
 MakeDiploidFSTMat = function(SNPmat,locusNames,popNames){
   # SNPmat is a matrix with individuals in rows and snps in columns

@@ -31,7 +31,7 @@
 #' The function returns a plot, containing a histogram of Fst with the inferred neutral distribution superimposed.
 #' 
 #' See the read me file at github.
-#'  @export
+#'@export
 
 OutFLANKResultsPlotter = function(OFoutput,withOutliers = TRUE, NoCorr= TRUE, Hmin=0.1, binwidth=0.005, Zoom = FALSE,RightZoomFraction = 0.05,titletext=NULL){
   data=OFoutput$results[which(OFoutput$results$He>Hmin),]

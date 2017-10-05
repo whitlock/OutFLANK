@@ -17,7 +17,6 @@ Returns a list of values related to FST:
  \item 	T1NoCorr: The numerator of the uncorrected sample size correction (similar to Weir and Cockerham 1984)
  \item   T2NoCorr: The denominator of the uncorrected sample size correction
  }
- @export
 }
 \description{
 Calculates FST without correction for local sample sizes, for diploid biallelic data. This is necessary for using OutFLANK, which depends on these uncorrected values for reliable function. (Otherwise, sampling corrections can sometimes cause negative estimates of FST.)

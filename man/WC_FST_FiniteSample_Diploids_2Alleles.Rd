@@ -17,7 +17,6 @@ Returns a list of values related to FST:
  \item 	T1: The numerator of the Fst calculation (a from Weir and Cockerham 1984)
  \item   T2NoCorr: The denominator of the Fst calculation (a+b+c from Weir and Cockerham 1984)
  }
- @export
 }
 \description{
 Calculates FST with correction for local sample sizes, for diploid biallelic data.

@@ -32,7 +32,6 @@ OutFLANKResultsPlotter(OFoutput, withOutliers = TRUE, NoCorr = TRUE,
 The function returns a plot, containing a histogram of Fst with the inferred neutral distribution superimposed.
 
 See the read me file at github.
- @export
 }
 \description{
 #'@title Plot the distributions of Fst from OutFLANK output

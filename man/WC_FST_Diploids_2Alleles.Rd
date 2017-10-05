@@ -21,7 +21,6 @@ Returns a list of values related to FST:
  \item   T2NoCorr: The denominator of the Fst calculation without sample size correction
  \item   meanAlleleFreq: The mean allele frequency over all populations for this locus
  }
- @export
 }
 \description{
 Calculates FST both with and without correction for local sample sizes, for diploid biallelic data. Based on Weir and Cockerham (1984)

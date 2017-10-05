@@ -16,7 +16,7 @@
 #'  \item   T1: The numerator of the Fst calculation
 #'  \item   T2: The denominator of the Fst calculation
 #'  }
-#'  @export
+#'@export
 #'  
 WC_FST_FiniteSample_Haploids_2AllelesB_MCW<-function(AllCounts){
   #Input a matrix of the counts of each allele (columns) in each population (rows)
@@ -63,7 +63,7 @@ WC_FST_FiniteSample_Haploids_2AllelesB_MCW<-function(AllCounts){
 #'  \item 	T1NoCorr: The numerator of the FSTNoCOrr calculation 
 #'  \item   T2NoCorr: The denominator of the FSTNoCOrr calculation
 #'  }
-#'  @export
+#'@export
 #'  
 WC_FST_FiniteSample_Haploids_2AllelesB_NoSamplingCorrection<-function(AllCounts){
   #Input a matrix of the counts of each allele (columns) in each population (rows)
@@ -127,7 +127,7 @@ fstBarCalculator=function(DataList){
 #'  \item 	T1NoCorr: The numerator of the uncorrected sample size correction (similar to Weir and Cockerham 1984)
 #'  \item   T2NoCorr: The denominator of the uncorrected sample size correction
 #'  }
-#'  @export
+#'@export
 #'  
 WC_FST_FiniteSample_Diploids_2Alleles_NoCorr<-function(Sample_Mat){
   
@@ -178,7 +178,7 @@ WC_FST_FiniteSample_Diploids_2Alleles_NoCorr<-function(Sample_Mat){
 #'  \item 	T1: The numerator of the Fst calculation (a from Weir and Cockerham 1984)
 #'  \item   T2NoCorr: The denominator of the Fst calculation (a+b+c from Weir and Cockerham 1984)
 #'  }
-#'  @export
+#'@export
 #' 
 WC_FST_FiniteSample_Diploids_2Alleles<-function(Sample_Mat){
   

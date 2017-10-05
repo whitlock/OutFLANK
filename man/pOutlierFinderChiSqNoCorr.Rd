@@ -17,13 +17,12 @@ pOutlierFinderChiSqNoCorr(DataList, Fstbar, dfInferred, qthreshold = 0.05)
 }
 \value{
 Returns a data frame with the original data, and two new columns appended:
-\itemize {
+\itemize{
 \item $qvalues the q-value for a locus
 \item $OutlierFlag TRUE if q is less than the qthreshold; FALSE otherwise
 \item $pvalues the p-value for a locus
-\item $pvaluesRightTail the one-sided (right tail) p-value for a locus}
-
- @export
+\item $pvaluesRightTail the one-sided (right tail) p-value for a locus
+}
 }
 \description{
 Calculates q-values for test of neutrality for a list of loci, using input of an inferred degress of freedo for the chi-square and mean Neutral FST
