@@ -16,11 +16,11 @@
 #' 
 #' @param NoCorr Plots the distribution of FSTNoCorr when TRUE. Recommended, because this is the data used by OutFLANK to infer the distribution.
 #' 
-#' @param Hmin The minimum heterozygosity required before including  a locus in the plot.
+#' @param Hmin The minimum heterozygosity required before including a locus in the plot.
 #' 
 #' @param binwidth The width of bins in the histogram.
 #' 
-#' @param Zoom If Zoom is set to TRUE, then the graph will zoom in on the right tail of the distirbution (based on argument RightZoomFraction)
+#' @param Zoom If Zoom is set to TRUE, then the graph will zoom in on the right tail of the distribution (based on argument RightZoomFraction)
 #' 
 #' @param RightZoomFraction Used when Zoom = TRUE. Defines the proportion of the distribution to plot.
 #' 
@@ -129,7 +129,7 @@ FstDistPlotterAddBadCurve = function(df, FSTlist,  FSTbar, binwidth = 0.005, Rig
 }
 
 
-#  OutFLANKBadCurvePlotter draws a curve based on the same Fstbar but with soe differnet degrees of freedom
+#  OutFLANKBadCurvePlotter draws a curve based on the same Fstbar but with some differnet degrees of freedom
 OutFLANKBadCurvePlotter = function(badDF,OFoutput,withOutliers = TRUE, NoCorr= TRUE, Hmin=0.1, binwidth=0.005, Zoom = FALSE,RightZoomFraction = 0.99,titletext=NULL){
   data=OFoutput$results[which(OFoutput$results$He>Hmin),]
   if(NoCorr) {
