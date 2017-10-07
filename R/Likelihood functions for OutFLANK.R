@@ -13,7 +13,7 @@ EffectiveNumberSamplesMLE=function(FstVect, Fstbar, NumberOfSamples, SmallestFst
   
   #The Minimum Fst considered in the trimmed data is the larger of the amount
   #specified by the user or the mean FSt over 100. This is to prevent extremely
-  #small Fsts from causing estiamtion errors (Especially when R interprets a
+  #small Fsts from causing estimation errors (Especially when R interprets a
   #small Fst as FSt=0.)
   LowTrimPoint=max(Fstbar/100,SmallestFstInTrimmedList)
   
