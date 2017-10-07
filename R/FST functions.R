@@ -109,7 +109,7 @@ fstBarCalculator=function(DataList){
 
 #####From FODR-- Diploid Fst from Weir and Cockerham 1984##########
 ##########################################
-## WC FST for infinite sample of diploid allele freqs; without a correction for loacl sample size
+## WC FST for infinite sample of diploid allele freqs; without a correction for local sample size
 ###########################################  
 
 
