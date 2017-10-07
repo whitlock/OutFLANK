@@ -54,7 +54,7 @@
 
 # This results dataframe includes all of the input data, plus the following columns:
 #     $indexOrder: integer index giving the original order of rows in the input file
-#     $GoodH: TRUE if the heterozygosity is above the threshold set; FALS otherwise
+#     $GoodH: TRUE if the heterozygosity is above the threshold set; FALSE otherwise
 #     $qvalues: q-value for locus against null hypothesis of neutrality
 #     $pvalues: p-value for locus against null hypothesis of neutrality
 #     $pvaluesRightTail: p-value for locus against null hypothesis of neutrality, based only on the right tail
@@ -63,7 +63,7 @@
 
 
 
-#############LOAD NECESSARY PACAKAGES############# 
+#############LOAD NECESSARY PACKAGES############# 
 
 #Download the biocLite package at first use. On subsequent uses, run library(qvalue) before 
 #using functions in the rest of this file.
@@ -79,13 +79,13 @@ library(qvalue)
  #'
  #'This function should take in a dataframe ("FstDataFrame") that 
 #'has columns for $LocusName,$Fst,$T1,$T2,$FstNoCorr, $T1NoCorr, $T2NoCorr,$H. It should return a dataframe 
-#'with those same columns but also new columns for $LowOutlierFlag, $HighOutlierFlag,and $q.
+#'with those same columns but also new columns for $LowOutlierFlag, $HighOutlierFlag, and $q.
 #'
 #'This function requires Fst's calculated without sample size correction. These
 #'can be calculated, for example, with WC_FST_FiniteSample_Haploids_2AllelesB_NoSamplingCorrection in this package.
 #'
 #'This use of the biased FSTs is necessary for the trimming outlier approach 
-#'with small samples, because the debiasing sometimes creates negtive Fsts 
+#'with small samples, because the debiasing sometimes creates negative Fsts 
 #'which do not fit into the chi-square distribution.
 
 #'This will use FST's calculated without sample size correction for outlier tests.
@@ -93,7 +93,7 @@ library(qvalue)
 #'all loci, the resulting measures ought to be give similar results.
 
 #'This use of the biased FSTs is necessary for the trimming outlier approach with
-#'small samples, because the debiasing sometimes creates negtive Fsts which do
+#'small samples, because the debiasing sometimes creates negative Fsts which do
 #'not fit into the chi-square distribution.
 #'
 #'@title Fst outliers with trimming
@@ -101,7 +101,7 @@ library(qvalue)
 #'@param FstDataFrame A data frame that includes a row for each locus, with columns as follows: 
 #'\itemize{
 #'                   \item $LocusName: a character string that uniquely names each locus. 
-#'                    \item $FST: Fst calculated for this locus. (Kept here to report the unbased Fst of the results) 
+#'                    \item $FST: Fst calculated for this locus. (Kept here to report the unbiased Fst of the results) 
 #'                    \item $T1: The numerator of the estimator for Fst (necessary, with $T2, to calculate mean Fst) 
 #'                    \item $T2: The denominator of the estimator of Fst 
 #'                    \item $FSTNoCorr: Fst calculated for this locus without sample
@@ -113,7 +113,7 @@ library(qvalue)
 #'                    \item $He: The heterozygosity of the locus (used to screen out low heterozygosity loci that have a different distribution) 
 #'                    }
 #'                    
-#' @param LeftTrimFraction The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood funciton is applied.
+#' @param LeftTrimFraction The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood function is applied.
 #' 
 #' @param RightTrimFraction The proportion of loci that are trimmed from the upper end of the range of Fst before the likelihood funciton is applied.
 #' 
@@ -130,13 +130,13 @@ library(qvalue)
 #'  \item   FSTbar: the mean FST inferred from loci not marked as outliers 
 #'  \item 	FSTNoCorrbar: the mean FST (not corrected for sample size---gives an upwardly biased estimate of FST)
 #'  \item 	dfInferred: the inferred number of degrees of freedom for the chi-square distribution of neutral FST
-#'   \item  numberLowFstOutliers: Number of loci flagged as having a signficantly low FST (not reliable)
-#'   \item  numberHighFstOutliers: Number of loci identified as haivng significantly high FST
+#'   \item  numberLowFstOutliers: Number of loci flagged as having a significantly low FST (not reliable)
+#'   \item  numberHighFstOutliers: Number of loci identified as having significantly high FST
 #'   \item  results:  a data frame with a row for each locus. This data frame includes all the original columns in the 
 #'                    data set, and six new ones: 
 #'                    \itemize{
 #'              \item $indexOrder (the original order of the input data set),
-#'              \item $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),
+#'              \item $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hmin set by input),
 #'              \item $OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and 
 #'              \item $q (the q-value for the test of neutrality for the locus)
 #'              \item $pvalues (the p-value for the test of neutrality for the locus)
@@ -179,7 +179,7 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
   oldOutlierFlag=rep(FALSE,NLociTotal)
   
   
-  #Note: All negative FST loci are maked as putative outliers, which will need
+  #Note: All negative FST loci are marked as putative outliers, which will need
   #to be tested with the coalescent model later. In the meantime, they are
   #removed so as to not confuse the likelihood function.
   
@@ -266,11 +266,11 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
 
 
 #' 
-#' Calculates q-values for test of neutrality for a list of loci, using input of an inferred degress of freedo for the chi-square and mean Neutral FST
+#' Calculates q-values for test of neutrality for a list of loci, using input of an inferred degrees of freedom for the chi-square and mean Neutral FST
 #' 
 #' @title q values for test of neutrality
 #'
-#' @param DataList A data frame witha row for each locus, that includes at least a column for $FSTNoCorr. It also helps if there is a column with an identifier for the locus. This dataframe should have empty columns called $qvalues and $OutlierFlag as well.
+#' @param DataList A data frame with a row for each locus, that includes at least a column for $FSTNoCorr. It also helps if there is a column with an identifier for the locus. This dataframe should have empty columns called $qvalues and $OutlierFlag as well.
 #' 
 #'  @param Fstbar Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank 
 #'  
@@ -309,7 +309,7 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   pList=pTwoSidedFromChiSq(DataListGood$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
   pListRightTail=1-pchisq(DataListGood$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
   
-  #Note: Change made 13 June 2014; q-values now only calcualted on right-tail one-sided p-values
+  #Note: Change made 13 June 2014; q-values now only calculated on right-tail one-sided p-values
   qtemp=qvalue(pListRightTail,fdr.level=qthreshold,pi0.method="bootstrap")
   #Note:  Using the bootstrap method here seems OK, but if this causes problems remove the pi0.method="bootstrap" in the previous line to revert to the default.
   
