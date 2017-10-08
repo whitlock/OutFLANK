@@ -13,7 +13,9 @@ pOutlierFinderChiSqNoCorr(DataList, Fstbar, dfInferred, qthreshold = 0.05)
  
  @param dfInferred The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.
  
- @param qthreshold The threshold False Discovery Rate for calling a locus an outlier ( default = 0.05)}
+ @param qthreshold The threshold False Discovery Rate for calling a locus an outlier ( default = 0.05)
+                
+ @param Hmin The minimum heterozygosity required before including calculations from a locus.}
 }
 \value{
 Returns a data frame with the original data, and two new columns appended:
@@ -25,5 +27,5 @@ Returns a data frame with the original data, and two new columns appended:
 }
 }
 \description{
-Calculates q-values for test of neutrality for a list of loci, using input of an inferred degress of freedo for the chi-square and mean Neutral FST
+Calculates q-values for test of neutrality for a list of loci, using input of an inferred degrees of freedom for the chi-square and mean Neutral FST
 }
