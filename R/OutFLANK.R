@@ -153,11 +153,11 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
   Fstdata= outputDFStarterNoCorr(FstDataFrame,Hmin)
 
   
-  #making working dataframe with real Fst (no NAs), storing NAs to add back later
- # next line is new (to screen for Hemin), and the two lines after that have been edited as well.
+  # making working dataframe with real Fst (no NAs), storing NAs to add back later
+  # This also removes loci with He values lower than Hmin from the working data frame
   nonkeepers = which((is.na(Fstdata$FSTNoCorr))|(Fstdata$He<Hmin))
-  workingDataFrame=Fstdata[-nonkeepers,]
-  storedDataFrameNA=Fstdata[nonkeepers,]
+  workingDataFrame = Fstdata[-nonkeepers,]
+  storedDataFrameNA = Fstdata[nonkeepers,]
   
   
   #Finding upper and lower bounds for trimming (eliminating NAs, but not negative FSTs)
