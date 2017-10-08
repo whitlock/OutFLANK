@@ -197,7 +197,7 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
     FstbarNoCorrTemp=fstBarCalculatorNoCorr(workingDataFrame[putativeNeutralListTemp,])  
 
     dfInferredTemp=EffectiveNumberSamplesMLE(workingDataFrame$FSTNoCorr[putativeNeutralListTemp],FstbarNoCorrTemp,NumberOfSamples,LowTrimPoint,HighTrimPoint)
-    workingDataFrame=pOutlierFinderChiSqNoCorr(workingDataFrame,FstbarNoCorrTemp,dfInferredTemp,qthreshold)
+    workingDataFrame=pOutlierFinderChiSqNoCorr(workingDataFrame,FstbarNoCorrTemp,dfInferredTemp,qthreshold, Hmin)
 
     #### mark all negative FSTs as outliers if lowest nonneg FST is outlier
     #### (because negative Fst estimates can't be evaluated through the
@@ -288,7 +288,7 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
 #' 
 #'@export
 #'
-pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05){
+pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05, Hmin=0.1){
   #Finds outliers based on chi-squared distribution
   #Takes given values of dfInferred and Fstbar, and returns a list of p-values and q-values for all loci based on chi-square.
   #Assumes that the DataList input has a column called $FSTNoCorr and that empty columns exist for $qvalues and $OutlierFlag 
@@ -300,9 +300,10 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   #DataListNeg is necessary to keep separate here because these cases do not have meaningful results with the chi-square approach;
   #   however, they do carry information.
   
-  DataListGood=DataList[which(DataList$FSTNoCorr>0),]
-  DataListNonPosFst=DataList[which(DataList$FSTNoCorr<=0),]
-  DataListNA=DataList[which(is.na(DataList$FSTNoCorr)),]
+  DataListGood = DataList[which((DataList$FSTNoCorr > 0) & (DataList$He >= Hmin),]
+  DataListLowHe = DataList[which((DataList$He < Hmin),]
+  DataListNonPosFst = DataList[which(DataList$FSTNoCorr <= 0),]
+  DataListNA = DataList[which(is.na(DataList$FSTNoCorr)),]
   
   
   
@@ -317,7 +318,7 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   DataListGood$pvaluesRightTail=pListRightTail
   DataListGood$qvalues=qtemp$qvalues
   DataListGood$OutlierFlag=qtemp$significant
-  rbind(DataListGood,DataListNonPosFst,DataListNA) 
+  rbind(DataListGood,DataListLowHe,DataListNonPosFst,DataListNA) 
   
 }
 
