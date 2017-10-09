@@ -69,7 +69,7 @@ my_fst <- MakeDiploidFSTMat(t(sim1a$G), locusNames = sim1a$position, popNames = 
 
 
 ## Data checks: Heterozygosity vs. FST
-Here, you can see how some of the low H loci have high FST. These are all neutral loci in the simulation, and this is why the are excluded from the OutFLANK algorithm.
+Here, you can see how some of the low H loci have high FST. These are all neutral loci in the simulation, and this is it is important to exclude them from the OutFLANK algorithm.
 ```{r}
 plot(my_fst$He, my_fst$FST)
 ```
@@ -148,24 +148,56 @@ hist(P_all$FSTNoCorr[P_all$He>0.1], xlim=c(0,0.2), breaks=100)
   plot(P_all$FST, q$qvalues)
   P_all$q <-  q$qvalues
   
-## My outliers
-  P_all[which(P_all$q < 0.01),]
+## My outliers with a q-value of less than 0.01
+  my_out <- which(P_all$q < 0.01)
+  P_all[my_out,]
 ```
+
+In this P-value histogram, you can see the "bump" near 0. This occurs now because some of these loci were removed by the LD trimming.
+
+Because of LD, we don't really expect all the outlier loci located within a few base pairs of each other to all be causal. 
 
 ## Highlight outliers on Manhattan Plot
-```{r}
 
+For publication, we want to show the accurate estimate of FST, not the uncorrected estimate.
+Remember to exclude those low H loci!
 
+```{r, fig.width=7}
+plot(P_all$LocusName[P_all$He>0.1], P_all$FST[P_all$He>0.1],
+     xlab="Position", ylab="FST", col=rgb(0,0,0,0.2))
+  points(P_all$LocusName[my_out], P_all$FST[my_out], col="magenta", pch=20)  
 ```
 
+## Learn about the true causal loci in the simulations
+The data was simulated by mutations (QTNs or quantitative trait nucleotides) that have additive effects on a phenotype, and the phenotype was under stabilizing selection with the optimum in each location dependent on the environment.
 
+Information about the mutations that have effects on the phenotype are included with the package in the `muts` data. We can query the data for the QTNs that contribute at least 10% of the genetic variance of the phenotype:
+
+```{r}
+data(muts)
+muts[muts$prop>0.1,]
+```
+
+Mutations at location 21929 and 81730 are discovered by OutFLANK and collectively explain 80% of the genetic variance in the trait.
 
 ## Bonus: Convert VCF to OutFLANK format
 
-On GitHub at whilock/OutFLANK/data, you can download a vcf file of the simulations. Here is a simple script to convert a vcf file into OutFLANK format. 
+On GitHub at whilock/OutFLANK/data, you can download a vcf file of the simulations. Here is a simple script to convert a vcf file into OutFLANK format, using functions from the R package `vcfR`. 
 
 DISCLAIMER: Note that this dataset does not include missing data, so it may not work in all scenarios. Also, NA should be replaced with "9" to work with the functions in the package.
 
 ```{r}
-my_vcf <- read.vcfR("data/sim1a.vcf.gz")
+obj.vcfR <- read.vcfR("data/sim1a.vcf.gz")
+
+geno <- extract.gt(obj.vcfR) # Character matrix containing the genotypes
+position <- getPOS(obj.vcfR) # Positions in bp
+chromosome <- getCHROM(obj.vcfR) # Chromosome information
+
+G <- matrix(NA, nrow = nrow(geno), ncol = ncol(geno))
+
+G[geno %in% c("0/0", "0|0")] <- 0
+G[geno  %in% c("0/1", "1/0", "1|0", "0|1")] <- 1
+G[geno %in% c("1/1", "1|1")] <- 2
+
+table(as.vector(G))
 ```
