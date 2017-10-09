@@ -101,6 +101,7 @@ Next, you can run the `OutFLANK()` function to estimate the parameters on the ne
 ```{r}
 #### Evaluating OutFLANK with pruned data ####
 out_trim <- OutFLANK(my_fst[which_pruned,], NumberOfSamples=39, qthreshold = 0.05)
+str(out_trim)
 head(out_trim$results)
 ```
 
@@ -127,10 +128,28 @@ hist(out_trim$results$pvaluesRightTail)
 
 Now that we've estimated neutral mean FST and df to a quasi-independent set of SNPs, we can go back and calculate P-values for all the loci in our dataset. 
 
+Note that it is important to run this code with the uncorrected FSTs (`FSTNoCorr`) and the uncorrected mean FST (`FSTNoCorrbar`).
+
 ```{r}
-P_all <- pOutlierFinderChiSqNoCorr(my_fst, Fstbar = out_trim$FSTbar, 
-                                   dfInferred = out_trim$dfInferred, qthreshold = 0.05)
+P_all <- pChiSqNoCorr(my_fst, Fstbar = out_trim$FSTNoCorrbar, 
+                                   dfInferred = out_trim$dfInferred)
+
 head(P_all)
+sum(P_all$FSTNoCorr>0.05)
+par(mfrow=c(2,1))
+plot(P_all$FSTNoCorr, P_all$Pval, xlim=c(0,0.2))
+hist(P_all$FSTNoCorr[P_all$He>0.1], xlim=c(0,0.2), breaks=100)
+
+## Check the P-value histogram
+  hist(P_all$Pval, breaks=50)
+
+## Control for false discovery rate
+  q <- qvalue(P_all$Pval, fdr.level = 0.05)
+  plot(P_all$FST, q$qvalues)
+  P_all$q <-  q$qvalues
+  
+## My outliers
+  P_all[which(P_all$q < 0.01),]
 ```
 
 ## Highlight outliers on Manhattan Plot

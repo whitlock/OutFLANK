@@ -301,7 +301,7 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   #   however, they do carry information.
   
   DataListGood = DataList[which((DataList$FSTNoCorr > 0) & (DataList$He >= Hmin)),]
-  DataListLowHe = DataList[which((DataList$He < Hmin),]
+  DataListLowHe = DataList[which(DataList$He < Hmin),]
   DataListNonPosFst = DataList[which(DataList$FSTNoCorr <= 0),]
   DataListNA = DataList[which(is.na(DataList$FSTNoCorr)),]
   
@@ -319,8 +319,44 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   DataListGood$qvalues=qtemp$qvalues
   DataListGood$OutlierFlag=qtemp$significant
   rbind(DataListGood,DataListLowHe,DataListNonPosFst,DataListNA) 
-  
 }
+
+
+#' 
+#' Calculates P-values for test of neutrality for a list of loci, using input of an inferred degrees of freedom for the chi-square and mean Neutral FST
+#' 
+#' @title P-values for test of neutrality
+#'
+#' @param DataList A data frame with a row for each locus, that includes at least a column for $FSTNoCorr and $He. 
+#'  @param Fstbar Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank 
+#'  
+#'  @param dfInferred The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.
+#'  
+#' @return Returns a data frame with the original data, and two new columns appended:
+#' \itemize{
+#' \item $pvalues the p-value for a locus, with extremely large values of FST near 0
+#' \item $pvaluesRightTail the one-sided (right tail) p-value for a locus
+#' }
+#' 
+#'@export
+#'
+pChiSqNoCorr=function(DataList, Fstbar, dfInferred, Hmin=0.1){
+  #Finds outliers based on chi-squared distribution
+  #Takes given values of dfInferred and Fstbar, and returns a list of p-values and q-values for all loci based on chi-square.
+  #Assumes that the DataList input has a column called $FSTNoCorr and that empty columns exist for $qvalues and $OutlierFlag 
+
+  #Divide DataList into 3 lists:  DataListGood has $FST>0; DataListNeg has cases where $FST <=0; and
+  #   DataListNA has cases where $FST is NA.
+  #DataListNeg is necessary to keep separate here because these cases do not have meaningful results with the chi-square approach;
+  #   however, they do carry information.
+
+  pList=1-pchisq(DataList$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
+  pList[DataList$He < Hmin] = NA
+  return(data.frame(DataList, Pval=pList))
+}  
+
+
+
 
 pTwoSidedFromChiSq=function(x,df){
   #Takes a value x, finds the two-sided p-value for comparison to a chi-square distribution with df degrees of freedom.
