@@ -300,7 +300,7 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   #DataListNeg is necessary to keep separate here because these cases do not have meaningful results with the chi-square approach;
   #   however, they do carry information.
   
-  DataListGood = DataList[which((DataList$FSTNoCorr > 0) & (DataList$He >= Hmin),]
+  DataListGood = DataList[which((DataList$FSTNoCorr > 0) & (DataList$He >= Hmin)),]
   DataListLowHe = DataList[which((DataList$He < Hmin),]
   DataListNonPosFst = DataList[which(DataList$FSTNoCorr <= 0),]
   DataListNA = DataList[which(is.na(DataList$FSTNoCorr)),]
