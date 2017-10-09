@@ -27,7 +27,7 @@ if (!("vcfR" %in% installed.packages())){install.packages("vcfR")}
 #if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} 
 
 #devtools::install_github("whitlock/OutFLANK", ref="development", force=TRUE) # will need to DELETE this link for final .Rmd!
-#library(OutFLANK)  # outflank package
+library(OutFLANK)  # outflank package
 library(vcfR)
 library(bigsnpr)   # package for LD pruning
 library(bigstatsr) # package for LD pruning 

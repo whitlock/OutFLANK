@@ -7,7 +7,7 @@
 WC_FST_Diploids_2Alleles(Sample_Mat)
 }
 \arguments{
-\item{Sample_Mat}{This is an array with a row for each population. There should be three columns, with the numbers of individuals from that populaiton which are homozygotes for one allele, heterozygotes, and homozygotes for the other allele.}
+\item{Sample_Mat}{This is an array with a row for each population. There should be three columns, with the numbers of individuals from that population which are homozygotes for one allele, heterozygotes, and homozygotes for the other allele.}
 }
 \value{
 Returns a list of values related to FST:

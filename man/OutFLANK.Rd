@@ -11,7 +11,7 @@ OutFLANK(FstDataFrame, LeftTrimFraction = 0.05, RightTrimFraction = 0.05,
 \item{FstDataFrame}{A data frame that includes a row for each locus, with columns as follows: 
 \itemize{
                   \item $LocusName: a character string that uniquely names each locus. 
-                   \item $FST: Fst calculated for this locus. (Kept here to report the unbased Fst of the results) 
+                   \item $FST: Fst calculated for this locus. (Kept here to report the unbiased Fst of the results) 
                    \item $T1: The numerator of the estimator for Fst (necessary, with $T2, to calculate mean Fst) 
                    \item $T2: The denominator of the estimator of Fst 
                    \item $FSTNoCorr: Fst calculated for this locus without sample
@@ -23,7 +23,7 @@ OutFLANK(FstDataFrame, LeftTrimFraction = 0.05, RightTrimFraction = 0.05,
                    \item $He: The heterozygosity of the locus (used to screen out low heterozygosity loci that have a different distribution) 
                    }}
 
-\item{LeftTrimFraction}{The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood funciton is applied.}
+\item{LeftTrimFraction}{The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood function is applied.}
 
 \item{RightTrimFraction}{The proportion of loci that are trimmed from the upper end of the range of Fst before the likelihood funciton is applied.}
 
@@ -39,13 +39,13 @@ The function returns a list with seven elements:
  \item   FSTbar: the mean FST inferred from loci not marked as outliers 
  \item 	FSTNoCorrbar: the mean FST (not corrected for sample size---gives an upwardly biased estimate of FST)
  \item 	dfInferred: the inferred number of degrees of freedom for the chi-square distribution of neutral FST
-  \item  numberLowFstOutliers: Number of loci flagged as having a signficantly low FST (not reliable)
-  \item  numberHighFstOutliers: Number of loci identified as haivng significantly high FST
+  \item  numberLowFstOutliers: Number of loci flagged as having a significantly low FST (not reliable)
+  \item  numberHighFstOutliers: Number of loci identified as having significantly high FST
   \item  results:  a data frame with a row for each locus. This data frame includes all the original columns in the 
                    data set, and six new ones: 
                    \itemize{
              \item $indexOrder (the original order of the input data set),
-             \item $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hemin set by input),
+             \item $GoodH (Boolean variable which is TRUE if the expected heterozygosity is greater than the Hmin set by input),
              \item $OutlierFlag (TRUE if the method identifies the locus as an outlier, FALSE otherwise), and 
              \item $q (the q-value for the test of neutrality for the locus)
              \item $pvalues (the p-value for the test of neutrality for the locus)
@@ -59,18 +59,18 @@ Takes Fst data for a list of loci to find outliers, using a trimmed likelihood a
 \details{
 This function should take in a dataframe ("FstDataFrame") that 
 has columns for $LocusName,$Fst,$T1,$T2,$FstNoCorr, $T1NoCorr, $T2NoCorr,$H. It should return a dataframe 
-with those same columns but also new columns for $LowOutlierFlag, $HighOutlierFlag,and $q.
+with those same columns but also new columns for $LowOutlierFlag, $HighOutlierFlag, and $q.
 
 This function requires Fst's calculated without sample size correction. These
 can be calculated, for example, with WC_FST_FiniteSample_Haploids_2AllelesB_NoSamplingCorrection in this package.
 
 This use of the biased FSTs is necessary for the trimming outlier approach 
-with small samples, because the debiasing sometimes creates negtive Fsts 
+with small samples, because the debiasing sometimes creates negative Fsts 
 which do not fit into the chi-square distribution.
 This will use FST's calculated without sample size correction for outlier tests.
 Such FSTs will be biased upwards, but as long as the sample size is similar for
 all loci, the resulting measures ought to be give similar results.
 This use of the biased FSTs is necessary for the trimming outlier approach with
-small samples, because the debiasing sometimes creates negtive Fsts which do
+small samples, because the debiasing sometimes creates negative Fsts which do
 not fit into the chi-square distribution.
 }

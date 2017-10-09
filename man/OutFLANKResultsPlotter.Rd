@@ -18,11 +18,11 @@ OutFLANKResultsPlotter(OFoutput, withOutliers = TRUE, NoCorr = TRUE,
 
 \item{NoCorr}{Plots the distribution of FSTNoCorr when TRUE. Recommended, because this is the data used by OutFLANK to infer the distribution.}
 
-\item{Hmin}{The minimum heterozygosity required before including  a locus in the plot.}
+\item{Hmin}{The minimum heterozygosity required before including a locus in the plot.}
 
 \item{binwidth}{The width of bins in the histogram.}
 
-\item{Zoom}{If Zoom is set to TRUE, then the graph will zoom in on the right tail of the distirbution (based on argument RightZoomFraction)}
+\item{Zoom}{If Zoom is set to TRUE, then the graph will zoom in on the right tail of the distribution (based on argument RightZoomFraction)}
 
 \item{RightZoomFraction}{Used when Zoom = TRUE. Defines the proportion of the distribution to plot.}
 
