@@ -8,13 +8,15 @@ pOutlierFinderChiSqNoCorr(DataList, Fstbar, dfInferred, qthreshold = 0.05,
   Hmin = 0.1)
 }
 \arguments{
-\item{DataList}{A data frame with a row for each locus, that includes at least a column for $FSTNoCorr. It also helps if there is a column with an identifier for the locus. This dataframe should have empty columns called $qvalues and $OutlierFlag as well.
+\item{DataList}{A data frame with a row for each locus, that includes at least a column for $FSTNoCorr. It also helps if there is a column with an identifier for the locus. This dataframe should have empty columns called $qvalues and $OutlierFlag as well.}
 
- @param Fstbar Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank 
- 
- @param dfInferred The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.
- 
- @param qthreshold The threshold False Discovery Rate for calling a locus an outlier ( default = 0.05)}
+\item{Fstbar}{Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank}
+
+\item{dfInferred}{The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.}
+
+\item{qthreshold}{The threshold False Discovery Rate for calling a locus an outlier ( default = 0.05)}
+
+\item{Hmin}{The threshold heterozygosity (H) below which loci will be removed}
 }
 \value{
 Returns a data frame with the original data, and two new columns appended:

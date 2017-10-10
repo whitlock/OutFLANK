@@ -7,10 +7,13 @@
 pChiSqNoCorr(DataList, Fstbar, dfInferred, Hmin = 0.1)
 }
 \arguments{
-\item{DataList}{A data frame with a row for each locus, that includes at least a column for $FSTNoCorr and $He. 
-@param Fstbar Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank 
+\item{DataList}{A data frame with a row for each locus, that includes at least a column for $FSTNoCorr and $He.}
 
-@param dfInferred The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.}
+\item{Fstbar}{Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank}
+
+\item{dfInferred}{The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.}
+
+\item{Hmin}{Minimum heterozygosity (H) to exclude low H alleles}
 }
 \value{
 Returns a data frame with the original data, and two new columns appended:

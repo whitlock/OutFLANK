@@ -113,17 +113,17 @@ library(qvalue)
 #'                    \item $He: The heterozygosity of the locus (used to screen out low heterozygosity loci that have a different distribution) 
 #'                    }
 #'                    
-#' @param LeftTrimFraction The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood function is applied.
+#'@param LeftTrimFraction The proportion of loci that are trimmed from the lower end of the range of Fst before the likelihood function is applied.
 #' 
-#' @param RightTrimFraction The proportion of loci that are trimmed from the upper end of the range of Fst before the likelihood funciton is applied.
+#'@param RightTrimFraction The proportion of loci that are trimmed from the upper end of the range of Fst before the likelihood funciton is applied.
 #' 
-#' @param Hmin The minimum heterozygosity required before including calculations from a locus.
+#'@param Hmin The minimum heterozygosity required before including calculations from a locus.
 #' 
-#' @param NumberOfSamples The number of spatial locations included in the data set.
+#'@param NumberOfSamples The number of spatial locations included in the data set.
 #' 
-#' @param qthreshold The desired false discovery rate threshold for calculating q-values.
+#'@param qthreshold The desired false discovery rate threshold for calculating q-values.
 #' 
-#' @return
+#'@return
 #' 
 #' The function returns a list with seven elements:
 #' \itemize{
@@ -268,17 +268,17 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
 #' 
 #' Calculates q-values for test of neutrality for a list of loci, using input of an inferred degrees of freedom for the chi-square and mean Neutral FST
 #' 
-#' @title q values for test of neutrality
+#'@title q values for test of neutrality
 #'
-#' @param DataList A data frame with a row for each locus, that includes at least a column for $FSTNoCorr. It also helps if there is a column with an identifier for the locus. This dataframe should have empty columns called $qvalues and $OutlierFlag as well.
+#'@param DataList A data frame with a row for each locus, that includes at least a column for $FSTNoCorr. It also helps if there is a column with an identifier for the locus. This dataframe should have empty columns called $qvalues and $OutlierFlag as well.
 #' 
-#'  @param Fstbar Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank 
+#'@param Fstbar Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank 
 #'  
-#'  @param dfInferred The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.
+#'@param dfInferred The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.
 #'  
-#'  @param qthreshold The threshold False Discovery Rate for calling a locus an outlier ( default = 0.05)
-#'  
-#' @return Returns a data frame with the original data, and two new columns appended:
+#'@param qthreshold The threshold False Discovery Rate for calling a locus an outlier ( default = 0.05)
+#'@param Hmin The threshold heterozygosity (H) below which loci will be removed  
+#'@return Returns a data frame with the original data, and two new columns appended:
 #' \itemize{
 #' \item $qvalues the q-value for a locus
 #' \item $OutlierFlag TRUE if q is less than the qthreshold; FALSE otherwise
@@ -325,14 +325,15 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
 #' 
 #' Calculates P-values for test of neutrality for a list of loci, using input of an inferred degrees of freedom for the chi-square and mean Neutral FST
 #' 
-#' @title P-values for test of neutrality
+#'@title P-values for test of neutrality
 #'
-#' @param DataList A data frame with a row for each locus, that includes at least a column for $FSTNoCorr and $He. 
-#'  @param Fstbar Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank 
+#'@param DataList A data frame with a row for each locus, that includes at least a column for $FSTNoCorr and $He. 
+#'@param Fstbar Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank 
 #'  
-#'  @param dfInferred The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.
-#'  
-#' @return Returns a data frame with the original data, and two new columns appended:
+#'@param dfInferred The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.
+#'@param Hmin Minimum heterozygosity (H) to exclude low H alleles
+#'    
+#'@return Returns a data frame with the original data, and two new columns appended:
 #' \itemize{
 #' \item $pvalues the p-value for a locus, with extremely large values of FST near 0
 #' \item $pvaluesRightTail the one-sided (right tail) p-value for a locus
