@@ -4,7 +4,7 @@ author: "Katie Lotterhos"
 date: "2017-10-09"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{OutFLANK Vignette}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -66,14 +66,14 @@ my_fst <- MakeDiploidFSTMat(t(sim1a$G), locusNames = sim1a$position, popNames = 
 
 ## Data checks: Heterozygosity vs. FST
 Here, you can see how some of the low H loci have high FST. These are all neutral loci in the simulation, and this is it is important to exclude them from the OutFLANK algorithm.
-```{r}
+```{r, fig.width=6}
 plot(my_fst$He, my_fst$FST)
 ```
 
 ## Data checks: FST vs. FSTNoCorr
 To fit the FST distribution to chi-square, we use the FST uncorrected for sample size (`FSTNoCorr`). This is a valid approach as long as all loci have equal sample sizes within populations. The effect of correcting for sample size will make the corrected FST estimate lower than the uncorrected FST estimate. If a locus has a much lower sample size compared to the rest, it could have a much larger FSTNoCorr than FST (and therefore incorrectly inferred as an outlier). Look for deviations from this relationship in this plot, and remove those loci.
 
-```{r}
+```{r, fig.width=6}
 plot(my_fst$FST, my_fst$FSTNoCorr)
 ```
 
@@ -102,7 +102,7 @@ str(out_trim)
 ```
 
 Check the fit and make sure it looks good, especially in the right tail:
-```{r}
+```{r, fig.width=6}
 OutFLANKResultsPlotter(out_trim, withOutliers = TRUE,
                        NoCorr = TRUE, Hmin = 0.1, binwidth = 0.001, Zoom =
                          FALSE, RightZoomFraction = 0.05, titletext = NULL)
@@ -126,7 +126,7 @@ Now that we've estimated neutral mean FST and df to a quasi-independent set of S
 
 Note that it is important to run this code with the uncorrected FSTs (`FSTNoCorr`) and the uncorrected mean FST (`FSTNoCorrbar`).
 
-```{r}
+```{r, fig.width=6}
 P_all <- pChiSqNoCorr(my_fst, Fstbar = out_trim$FSTNoCorrbar, 
                                    dfInferred = out_trim$dfInferred)
 
