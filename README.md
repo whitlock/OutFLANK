@@ -9,6 +9,6 @@ First, read the description of how to use OutFLANK in "OutFLANK readme.pdf" avai
 
 Next, do the tutorial vignette, which illustrates best practices and data checks when using the package.
 
-The vignette can be found in `inst/doc/OutFLANKAnalysis.html` or if the package is installed by typing:
+The vignette can be found on github at `inst/doc/OutFLANKAnalysis.html` or if the package is installed by typing:
 `browseVignettes("OutFLANK")` in R
 
