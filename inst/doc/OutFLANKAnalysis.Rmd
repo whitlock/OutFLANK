@@ -116,7 +116,7 @@ OutFLANKResultsPlotter(out_trim , withOutliers = TRUE,
 ### Also check the P-value histogram:
 
 Here, we plot the "right-tailed" P-values, which means that outliers in the right tail of the FST distribution will have a P-value near zero. Because we ran the algorithm on a pruned set of SNPs, this will remove some of the signal around selected sites. So we expect this histogram to be flat and maybe have a bump near 0 for selected sites. This histogram looks pretty good.
-```{r}
+```{r, fig.width=6}
 hist(out_trim$results$pvaluesRightTail)
 ```
 

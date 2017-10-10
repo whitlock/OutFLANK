@@ -53,7 +53,7 @@ OutFLANKResultsPlotter(out_trim , withOutliers = TRUE,
                        NoCorr = TRUE, Hmin = 0.1, binwidth = 0.001, Zoom =
                          TRUE, RightZoomFraction = 0.15, titletext = NULL)
 
-## ------------------------------------------------------------------------
+## ---- fig.width=6--------------------------------------------------------
 hist(out_trim$results$pvaluesRightTail)
 
 ## ---- fig.width=6--------------------------------------------------------
