@@ -8,8 +8,11 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
+OutFLANK is an R package that implements the method developed by Whitlock and Lotterhos to use likelihood on a trimmed distribution of FST values to infer the distribution of FST for neutral markers. This distribution is then used to assign q-values to each locus to detect outliers that may be due to spatially heterogeneous selection.
 
-We've put this tutorial together to illustrate best practices when using OutFLANK:
+READ THE pdf README FIRST.
+
+This vignette shows some data checks and best practices you can use when using OutFLANK.
 
 * One good practice is to check for loci with small samples sizes (which may result in loci that deviate between `FST` and the uncorrected FST used in the OurFLANK algorithm `FSTNoCorr`). 
 
@@ -19,11 +22,13 @@ We've put this tutorial together to illustrate best practices when using OutFLAN
 
 
 ## Packages and Data ##
+These 
+
 ```{r}
 if (!("devtools" %in% installed.packages())){install.packages(devtools)}
 library(devtools)
 if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
-if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
+if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigstatsr")}
 if (!("qvalue" %in% installed.packages())){TODO}
 if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
 #if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} 
@@ -42,6 +47,7 @@ This dataset was used as a data challenge for a workshop for genome scans. More 
 data("sim1a")
 str(sim1a)
 data(muts)
+str(muts)
 
 # Sample sizes of individuals within populations
 table(sim1a$pop)
@@ -127,6 +133,10 @@ Now that we've estimated neutral mean FST and df to a quasi-independent set of S
 Note that it is important to run this code with the uncorrected FSTs (`FSTNoCorr`) and the uncorrected mean FST (`FSTNoCorrbar`).
 
 ```{r, fig.width=6}
+P1 <- pOutlierFinderChiSqNoCorr(my_fst, Fstbar = out_trim$FSTNoCorrbar, 
+                                   dfInferred = out_trim$dfInferred, qthreshold = 0.05)
+head(P1)
+
 P_all <- pChiSqNoCorr(my_fst, Fstbar = out_trim$FSTNoCorrbar, 
                                    dfInferred = out_trim$dfInferred)
 

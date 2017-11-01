@@ -353,6 +353,7 @@ pChiSqNoCorr=function(DataList, Fstbar, dfInferred, Hmin=0.1){
 
   pList=1-pchisq(DataList$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
   pList[DataList$He < Hmin] = NA
+  # add negative FST 
   return(data.frame(DataList, Pval=pList))
 }  
 
