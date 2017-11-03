@@ -14,21 +14,19 @@ READ THE pdf README FIRST.
 
 This vignette shows some data checks and best practices you can use when using OutFLANK.
 
-* One good practice is to check for loci with small samples sizes (which may result in loci that deviate between `FST` and the uncorrected FST used in the OurFLANK algorithm `FSTNoCorr`). 
+The updated version of OutFLANK (v 0.2) correctly removes loci with low heterozygosity in the OutFLANK function. The original version (`OutFLANK_0.1`) did not do this correctly, so please make sure you are using the correct version (use `sessionInfo()` to check). Loci with low H do not follow the assumptions and should be ignored.
 
-* The updated version of OutFLANK (v 0.2) correctly removes loci with low heterozygosity in the OutFLANK function. The original version (`OutFLANK_0.1`) did not do this correctly, so please make sure you are using the correct version (use `sessionInfo()` to check). Loci with low H do not follow the assumptions and should be ignored.
-
-* Another good practice using a set of SNPs from the genome that is random or that is pruned for linkage disequilibrium (LD) to calculate mean FST (`FSTbar`) and the degrees of freedom on the chi-square distribution (`df`). We have found (with real and simulated whole-genome data) that non-random representation of loci (such as from regions in which many loci display the same signal, such as in regions of low recombination or in regions of extensive sweep signals) can cause the FST distribution to no longer follow the chi-squared expectation. Here, we illustrate how to use a subset of quasi-independent SNPs to estimate `FSTbar` and `df`, and then how to use these estimates to calculate $P$-values for a much larger set of SNPs.
 
 
 ## Packages and Data ##
-These 
+These packages are necessary for running this vignette.
 
 ```{r}
 if (!("devtools" %in% installed.packages())){install.packages(devtools)}
 library(devtools)
-if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
 if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigstatsr")}
+library(bigstatsr)
+if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
 if (!("qvalue" %in% installed.packages())){TODO}
 if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
 #if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} 
@@ -37,11 +35,12 @@ if (!("vcfR" %in% installed.packages())){install.packages("vcfR")}
 library(OutFLANK)  # outflank package
 library(vcfR)
 library(bigsnpr)   # package for LD pruning
-library(bigstatsr) # package for LD pruning 
 ```
 
 ## Load the data
 This dataset was used as a data challenge for a workshop for genome scans. More information about the workshop can be found here: https://github.com/bcm-uga/SSMPG2017
+
+
 
 ```{r}
 data("sim1a")
@@ -77,6 +76,10 @@ plot(my_fst$He, my_fst$FST)
 ```
 
 ## Data checks: FST vs. FSTNoCorr
+
+* One good practice is to check for loci with small samples sizes (which may result in loci that deviate between `FST` and the uncorrected FST used in the OurFLANK algorithm `FSTNoCorr`). 
+
+
 To fit the FST distribution to chi-square, we use the FST uncorrected for sample size (`FSTNoCorr`). This is a valid approach as long as all loci have equal sample sizes within populations. The effect of correcting for sample size will make the corrected FST estimate lower than the uncorrected FST estimate. If a locus has a much lower sample size compared to the rest, it could have a much larger FSTNoCorr than FST (and therefore incorrectly inferred as an outlier). Look for deviations from this relationship in this plot, and remove those loci.
 
 ```{r, fig.width=6}
@@ -85,7 +88,9 @@ plot(my_fst$FST, my_fst$FSTNoCorr)
 
 ## Data prep: prune SNPs for LD or use a random subset of SNPs
 
-Before doing running the OutFLANK() function to estimate the parameters on the neutral FST distribution, you will want to identify a quasi-random set of SNPs. Here, we show you how to prune whole-genome data for LD. This code will move along windows in the genome and remove any SNPs that have a correlation of greater than 0.2 with each other. Note that your chromosome needs to be of class `integer` for this to work.
+* Another good practice using a set of SNPs from the genome that is random or that is pruned for linkage disequilibrium (LD) to calculate mean FST (`FSTbar`) and the degrees of freedom on the chi-square distribution (`df`). We have found (with real and simulated whole-genome data) that non-random representation of loci (such as from regions in which many loci display the same signal, such as in regions of low recombination or in regions of extensive sweep signals) can cause the FST distribution to no longer follow the chi-squared expectation. Here, we illustrate how to use a subset of quasi-independent SNPs to estimate `FSTbar` and `df`, and then how to use these estimates to calculate $P$-values for a much larger set of SNPs.
+
+Before doing running the OutFLANK() function to estimate the parameters on the neutral FST distribution, you will want to identify a quasi-random set of SNPs. This code will move along windows in the genome and remove any SNPs that have a correlation of greater than 0.2 with each other. Note that your chromosome needs to be of class `integer` for this to work.
 
 ```{r LD pruning}
 #### LD Pruning ####
