@@ -156,7 +156,11 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
   # making working dataframe with real Fst (no NAs), storing NAs to add back later
   # This also removes loci with He values lower than Hmin from the working data frame
   nonkeepers = which((is.na(Fstdata$FSTNoCorr))|(Fstdata$He<Hmin))
-  workingDataFrame = Fstdata[-nonkeepers,]
+  if(length(nonkeepers)>0) 
+      workingDataFrame = Fstdata[-nonkeepers,]
+  else
+      workingDataFrame = Fstdata
+ 
   storedDataFrameNA = Fstdata[nonkeepers,]
   
   
