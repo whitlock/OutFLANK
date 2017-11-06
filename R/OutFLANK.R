@@ -292,6 +292,7 @@ outputDFStarterNoCorr=function(FstDataFrame,Hmin=0.1) {
 #' 
 #'@export
 #'
+
 pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05, Hmin=0.1){
   #Finds outliers based on chi-squared distribution
   #Takes given values of dfInferred and Fstbar, and returns a list of p-values and q-values for all loci based on chi-square.
@@ -304,26 +305,79 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   #DataListNeg is necessary to keep separate here because these cases do not have meaningful results with the chi-square approach;
   #   however, they do carry information.
   
-  DataListGood = DataList[which((DataList$FSTNoCorr > 0) & (DataList$He >= Hmin)),]
-  DataListLowHe = DataList[which(DataList$He < Hmin),]
-  DataListNonPosFst = DataList[which(DataList$FSTNoCorr <= 0),]
-  DataListNA = DataList[which(is.na(DataList$FSTNoCorr)),]
+  keepers = which((DataList$FSTNoCorr > 0) & (DataList$He >= Hmin))
+  DataListGood = DataList[keepers,]
+  DataListOthers = DataList[-keepers,]
+  numOthers = length(DataListOthers[,1])
+
+  #Putting NAs in the results columns for all loci that don'tmeet Hmin or positive Fst criteria
+  DataListOthers$pvalues = rep(NA,numOthers)
+  DataListOthers$pvaluesRightTail = rep(NA,numOthers)
+  DataListOthers$qvalues = rep(NA,numOthers)
+  DataListOthers$OutlierFlag = rep(NA,numOthers)
   
+  #Calculating p values and q-values for loci with high enough He and postive Fst
+  pList = pTwoSidedFromChiSq(DataListGood$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
+  pListRightTail = 1-pchisq(DataListGood$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
   
-  
-  pList=pTwoSidedFromChiSq(DataListGood$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
-  pListRightTail=1-pchisq(DataListGood$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
-  
-  #Note: Change made 13 June 2014; q-values now only calculated on right-tail one-sided p-values
   qtemp=qvalue(pListRightTail,fdr.level=qthreshold,pi0.method="bootstrap")
   #Note:  Using the bootstrap method here seems OK, but if this causes problems remove the pi0.method="bootstrap" in the previous line to revert to the default.
   
-  DataListGood$pvalues=pList
-  DataListGood$pvaluesRightTail=pListRightTail
-  DataListGood$qvalues=qtemp$qvalues
-  DataListGood$OutlierFlag=qtemp$significant
-  rbind(DataListGood,DataListLowHe,DataListNonPosFst,DataListNA) 
+  DataListGood$pvalues = pList
+  DataListGood$pvaluesRightTail = pListRightTail
+  DataListGood$qvalues = qtemp$qvalues
+  DataListGood$OutlierFlag = qtemp$significant
+  
+  #Combining the good and bad loci back and sorting
+  resultsDataFrame = rbind(DataListGood,DataListOthers) 
+  #resultsDataFrame=resultsDataFrame[order(resultsDataFrame$indexOrder),]
 }
+
+
+#' 
+#' Calculates q-values for test of neutrality for a list of loci, using input of an inferred degrees of freedom for the chi-square and mean Neutral FST, and returns the results in the same row order as the input
+#' 
+#'@title q values for test of neutrality
+#'
+#'@param DataList A data frame with a row for each locus, that includes at least a column for $FSTNoCorr. It also helps if there is a column with an identifier for the locus. 
+#' 
+#'@param Fstbar Mean Fst (without sample size correction) as inferred from neutral loci or OutFLank 
+#'  
+#'@param dfInferred The inferred degrees of freedom of the chi-square distribution describing neutral Fst values.
+#'  
+#'@param qthreshold The threshold False Discovery Rate for calling a locus an outlier ( default = 0.05)
+#'@param Hmin The threshold heterozygosity (H) below which loci will be removed  
+#'@return Returns a data frame with the original data, and two new columns appended:
+#' \itemize{
+#' \item $qvalues the q-value for a locus
+#' \item $OutlierFlag TRUE if q is less than the qthreshold; FALSE otherwise
+#' \item $pvalues the p-value for a locus
+#' \item $pvaluesRightTail the one-sided (right tail) p-value for a locus
+#' }
+#' 
+#'@export
+#'
+pOutlierFinderInOrder=function(DataList, Fstbar, dfInferred, qthreshold=0.05, Hmin=0.1){
+  
+  #Assign a temporary index to each row
+  
+  len = length(DataList$FSTNoCorr)
+  indexOrderTEMP = seq(1,len)
+  
+  DataListTEMP = cbind(DataList, indexOrderTEMP)
+  
+  #Calculate p and q values using pOutlierFinderChiSqNoCorr
+  
+  resultsDataFrame = pOutlierFinderChiSqNoCorr(DataListTEMP, Fstbar, dfInferred, qthreshold, Hmin)
+  
+  #Sort to index and delete temporary index
+  
+  resultsDataFrame=resultsDataFrame[order(resultsDataFrame$indexOrderTEMP),]
+  
+  within(resultsDataFrame, rm(indexOrderTEMP))
+  
+}
+
 
 
 #' 
@@ -345,7 +399,7 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
 #' 
 #'@export
 #'
-pChiSqNoCorr=function(DataList, Fstbar, dfInferred, Hmin=0.1){
+#pChiSqNoCorr=function(DataList, Fstbar, dfInferred, Hmin=0.1){
   #Finds outliers based on chi-squared distribution
   #Takes given values of dfInferred and Fstbar, and returns a list of p-values and q-values for all loci based on chi-square.
   #Assumes that the DataList input has a column called $FSTNoCorr and that empty columns exist for $qvalues and $OutlierFlag 
@@ -355,11 +409,11 @@ pChiSqNoCorr=function(DataList, Fstbar, dfInferred, Hmin=0.1){
   #DataListNeg is necessary to keep separate here because these cases do not have meaningful results with the chi-square approach;
   #   however, they do carry information.
 
-  pList=1-pchisq(DataList$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
-  pList[DataList$He < Hmin] = NA
+#  pList=1-pchisq(DataList$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
+#  pList[DataList$He < Hmin] = NA
   # add negative FST 
-  return(data.frame(DataList, Pval=pList))
-}  
+#  return(data.frame(DataList, Pval=pList))
+#}  
 
 
 
