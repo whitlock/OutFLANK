@@ -397,7 +397,7 @@ pOutlierFinderInOrder=function(DataList, Fstbar, dfInferred, qthreshold=0.05, Hm
 #' \item $pvaluesRightTail the one-sided (right tail) p-value for a locus
 #' }
 #' 
-#'@export
+#' #@export
 #'
 #pChiSqNoCorr=function(DataList, Fstbar, dfInferred, Hmin=0.1){
   #Finds outliers based on chi-squared distribution

@@ -1,7 +1,7 @@
 ---
 title: "OutFLANK Vignette"
 author: "Katie Lotterhos"
-date: "2017-10-09"
+date: "2017-11-29"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{OutFLANK Vignette}
@@ -12,7 +12,7 @@ OutFLANK is an R package that implements the method developed by Whitlock and Lo
 
 READ THE pdf README FIRST.
 
-This vignette shows some data checks and best practices you can use when using OutFLANK.
+This vignette shows some data checks and best practices when using OutFLANK.
 
 The updated version of OutFLANK (v 0.2) correctly removes loci with low heterozygosity in the OutFLANK function. The original version (`OutFLANK_0.1`) did not do this correctly, so please make sure you are using the correct version (use `sessionInfo()` to check). Loci with low H do not follow the assumptions and should be ignored.
 
@@ -31,7 +31,7 @@ if (!("qvalue" %in% installed.packages())){TODO}
 if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
 #if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} 
 
-#devtools::install_github("whitlock/OutFLANK", ref="development", force=TRUE) # will need to DELETE this link for final .Rmd!
+devtools::install_github("whitlock/OutFLANK", ref="development", force=TRUE) # will need to DELETE this link for final .Rmd!
 library(OutFLANK)  # outflank package
 library(vcfR)
 library(bigsnpr)   # package for LD pruning
