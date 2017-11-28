@@ -3,3 +3,5 @@ devtools::document()
 
 If update vignette, run:
 devtools::build_vignettes() 
+
+If add data, add documentation in R folder

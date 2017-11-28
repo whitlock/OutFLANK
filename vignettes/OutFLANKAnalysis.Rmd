@@ -24,9 +24,7 @@ These packages are necessary for running this vignette.
 ```{r}
 if (!("devtools" %in% installed.packages())){install.packages(devtools)}
 library(devtools)
-if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigstatsr")}
-library(bigstatsr)
-if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
+
 if (!("qvalue" %in% installed.packages())){TODO}
 if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
 #if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} 
@@ -34,7 +32,6 @@ if (!("vcfR" %in% installed.packages())){install.packages("vcfR")}
 devtools::install_github("whitlock/OutFLANK", ref="development", force=TRUE) # will need to DELETE this link for final .Rmd!
 library(OutFLANK)  # outflank package
 library(vcfR)
-library(bigsnpr)   # package for LD pruning
 ```
 
 ## Load the data
@@ -88,19 +85,33 @@ plot(my_fst$FST, my_fst$FSTNoCorr)
 
 ## Data prep: prune SNPs for LD or use a random subset of SNPs
 
-* Another good practice using a set of SNPs from the genome that is random or that is pruned for linkage disequilibrium (LD) to calculate mean FST (`FSTbar`) and the degrees of freedom on the chi-square distribution (`df`). We have found (with real and simulated whole-genome data) that non-random representation of loci (such as from regions in which many loci display the same signal, such as in regions of low recombination or in regions of extensive sweep signals) can cause the FST distribution to no longer follow the chi-squared expectation. Here, we illustrate how to use a subset of quasi-independent SNPs to estimate `FSTbar` and `df`, and then how to use these estimates to calculate $P$-values for a much larger set of SNPs.
+* Another good practice using a set of SNPs from the genome that is random or that is pruned for linkage disequilibrium (LD) to calculate mean FST (`FSTbar`) and the degrees of freedom on the chi-square distribution (`df`). We have found (with real and simulated whole-genome data) that non-random representation of loci (such as from regions in which many loci display the same signal, such as in regions of low recombination or in regions of extensive sweep signals) can cause the FST distribution to no longer follow the chi-squared expectation. 
 
-Before doing running the OutFLANK() function to estimate the parameters on the neutral FST distribution, you will want to identify a quasi-random set of SNPs. This code will move along windows in the genome and remove any SNPs that have a correlation of greater than 0.2 with each other. Note that your chromosome needs to be of class `integer` for this to work.
+Before doing running the OutFLANK() function to estimate the parameters on the neutral FST distribution, you will want to identify a quasi-random set of SNPs. We have provided the indexes of this quasi-random set of SNPs with the data distributed in the package:
 
-```{r LD pruning}
+```{r}
+which_pruned <- 
+```
+
+Our pruned SNP set is a couple thousand SNPs fewer than our full dataset.
+
+Below, we will illustrate how to use a subset of quasi-independent SNPs to estimate `FSTbar` and `df`, and then how to use these estimates to calculate $P$-values for a much larger set of SNPs.
+
+
+Here is the code that we used to obtain the pruned SNPs. Note that this code is not run with the vignette. Note also that your chromosome needs to be of class `integer` for this to work. See the `bigsnpr` package for more information.
+
+```
+if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigstatsr")}
+library(bigstatsr)
+if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
+library(bigsnpr)   # package for LD pruning
+
 #### LD Pruning ####
 G<-add_code256(big_copy(t(sim1a$G),type="raw"),code=bigsnpr:::CODE_012)
 newpc<-snp_autoSVD(G=G,infos.chr =sim1a$chromosome,infos.pos = sim1a$position)
 which_pruned <- attr(newpc, which="subset") # Indexes of remaining SNPS after pruning
 length(which_pruned)
 ```
-Our pruned SNP set is a couple thousand SNPs fewer than our full dataset.
-
 
 ## OutFLANK analysis with quasi-independent set of SNPs
 
