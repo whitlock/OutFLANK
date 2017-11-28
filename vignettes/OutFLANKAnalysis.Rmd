@@ -42,8 +42,6 @@ This dataset was used as a data challenge for a workshop for genome scans. More 
 ```{r}
 data("sim1a")
 str(sim1a)
-data(muts)
-str(muts)
 
 # Sample sizes of individuals within populations
 table(sim1a$pop)
@@ -63,6 +61,7 @@ First, we calculate FST on all the loci in our dataset.
 
 ```{r}
 my_fst <- MakeDiploidFSTMat(t(sim1a$G), locusNames = sim1a$position, popNames = sim1a$pop)
+head(my_fst)
 ```
 
 
@@ -81,7 +80,10 @@ To fit the FST distribution to chi-square, we use the FST uncorrected for sample
 
 ```{r, fig.width=6}
 plot(my_fst$FST, my_fst$FSTNoCorr)
+abline(0,1)
 ```
+
+Note how uncorrected FST is always larger than corrected FST.
 
 ## Data prep: prune SNPs for LD or use a random subset of SNPs
 
@@ -90,37 +92,23 @@ plot(my_fst$FST, my_fst$FSTNoCorr)
 Before doing running the OutFLANK() function to estimate the parameters on the neutral FST distribution, you will want to identify a quasi-random set of SNPs. We have provided the indexes of this quasi-random set of SNPs with the data distributed in the package:
 
 ```{r}
-which_pruned <- 
+data("which_pruned")
+head(which_pruned)
 ```
 
-Our pruned SNP set is a couple thousand SNPs fewer than our full dataset.
+Our pruned SNP set is a couple thousand SNPs fewer than our full dataset. For information on how we obtained these SNPs, see the "Bonus" section at the end of the vignette.
 
 Below, we will illustrate how to use a subset of quasi-independent SNPs to estimate `FSTbar` and `df`, and then how to use these estimates to calculate $P$-values for a much larger set of SNPs.
 
-
-Here is the code that we used to obtain the pruned SNPs. Note that this code is not run with the vignette. Note also that your chromosome needs to be of class `integer` for this to work. See the `bigsnpr` package for more information.
-
-```
-if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigstatsr")}
-library(bigstatsr)
-if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
-library(bigsnpr)   # package for LD pruning
-
-#### LD Pruning ####
-G<-add_code256(big_copy(t(sim1a$G),type="raw"),code=bigsnpr:::CODE_012)
-newpc<-snp_autoSVD(G=G,infos.chr =sim1a$chromosome,infos.pos = sim1a$position)
-which_pruned <- attr(newpc, which="subset") # Indexes of remaining SNPS after pruning
-length(which_pruned)
-```
 
 ## OutFLANK analysis with quasi-independent set of SNPs
 
 Next, you can run the `OutFLANK()` function to estimate the parameters on the neutral FST distribution.
 ```{r}
 #### Evaluating OutFLANK with pruned data ####
-out_trim <- OutFLANK(my_fst[which_pruned,], NumberOfSamples=39, qthreshold = 0.05)
+out_trim <- OutFLANK(my_fst[which_pruned,], NumberOfSamples=39, qthreshold = 0.05, Hmin = 0.1)
 str(out_trim)
-#head(out_trim$results)
+head(out_trim$results)
 ```
 
 Check the fit and make sure it looks good, especially in the right tail:
@@ -150,27 +138,18 @@ Note that it is important to run this code with the uncorrected FSTs (`FSTNoCorr
 
 ```{r, fig.width=6}
 P1 <- pOutlierFinderChiSqNoCorr(my_fst, Fstbar = out_trim$FSTNoCorrbar, 
-                                   dfInferred = out_trim$dfInferred, qthreshold = 0.05)
+                                   dfInferred = out_trim$dfInferred, qthreshold = 0.05, Hmin=0.1)
 head(P1)
+tail(P1)
+# notice how the output is ordered differently
 
-P_all <- pChiSqNoCorr(my_fst, Fstbar = out_trim$FSTNoCorrbar, 
-                                   dfInferred = out_trim$dfInferred)
+my_out <- P1$OutlierFlag==TRUE
+plot(P1$He, P1$FST, pch=19, col=rgb(0,0,0,0.1))
+points(P1$He[my_out], P1$FST[my_out], col="blue")
 
-head(P_all)
-sum(P_all$FSTNoCorr>0.05)
-plot(P_all$FSTNoCorr, P_all$Pval, xlim=c(0,0.2))
-hist(P_all$FSTNoCorr[P_all$He>0.1], xlim=c(0,0.2), breaks=100)
-
-## Check the P-value histogram
-  hist(P_all$Pval, breaks=50)
-
-## Control for false discovery rate
-  q <- qvalue(P_all$Pval, fdr.level = 0.05)
-  plot(P_all$FST, q$qvalues)
-  P_all$q <-  q$qvalues
-  
-## My outliers with a q-value of less than 0.01
-  my_out <- which(P_all$q < 0.01)
+hist(P1$pvaluesRightTail)
+# check the P-value histogram for the full set of data
+# if there are outliers, it should look flat with an inflation near 0
 ```
 
 In the P-value histogram, you can see the "bump" near 0. This occurs now because some of these loci were removed by the LD trimming.
@@ -183,9 +162,9 @@ For publication, we want to show the accurate estimate of FST, not the uncorrect
 Remember to exclude those low H loci!
 
 ```{r, fig.width=7}
-plot(P_all$LocusName[P_all$He>0.1], P_all$FST[P_all$He>0.1],
+plot(P1$LocusName[P1$He>0.1], P1$FST[P1$He>0.1],
      xlab="Position", ylab="FST", col=rgb(0,0,0,0.2))
-  points(P_all$LocusName[my_out], P_all$FST[my_out], col="magenta", pch=20)  
+  points(P1$LocusName[my_out], P1$FST[my_out], col="magenta", pch=20)  
 ```
 
 ## Learn about the true causal loci in the simulations
@@ -194,7 +173,7 @@ The data was simulated by mutations (QTNs or quantitative trait nucleotides) tha
 Information about the mutations that have effects on the phenotype are included with the package in the `muts` data. We can query the data for the QTNs that contribute at least 10% of the genetic variance of the phenotype:
 
 ```{r}
-data(muts)
+data("muts")
 muts[muts$prop>0.1,]
 ```
 
@@ -202,11 +181,9 @@ Mutations at location 21929 and 81730 are discovered by OutFLANK and collectivel
 
 ## Bonus: Convert VCF to OutFLANK format
 
-On GitHub at whilock/OutFLANK/data, you can download a vcf file of the simulations. Here is a simple script to convert a vcf file into OutFLANK format, using functions from the R package `vcfR`. 
+On GitHub at whilock/OutFLANK/data, you can download a vcf file of the simulations. Here is a simple script to convert a vcf file into OutFLANK format, using functions from the R package `vcfR`. Note that this code is not run with the vignette.
 
-
-
-```{r}
+```
 obj.vcfR <- read.vcfR("../data/sim1a.vcf.gz")
 
 geno <- extract.gt(obj.vcfR) # Character matrix containing the genotypes
@@ -224,8 +201,23 @@ table(as.vector(G))
 
 The object "G" is now in OutFLANK format.
 
-DISCLAIMER: Note that this dataset does not include missing data, so it may not work in all scenarios. Also, NA should be replaced with "9" to work with the functions in the package.
+DISCLAIMER: Note that this dataset does not include missing data, so this code may not work in all scenarios. Also, NA should be replaced with "9" to work with the functions in the package.
 
+## Bonus: code used to obtain pruned SNPs 
+Here is the code that we used to obtain the pruned SNPs. Note that this code is not run with the vignette. Note also that your chromosome needs to be of class `integer` for this to work. See the `bigsnpr` package for more information.
+
+```
+if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigstatsr")}
+library(bigstatsr)
+if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
+library(bigsnpr)   # package for LD pruning
+
+#### LD Pruning ####
+G<-add_code256(big_copy(t(sim1a$G),type="raw"),code=bigsnpr:::CODE_012)
+newpc<-snp_autoSVD(G=G,infos.chr =sim1a$chromosome,infos.pos = sim1a$position)
+which_pruned <- attr(newpc, which="subset") # Indexes of remaining SNPS after pruning
+length(which_pruned)
+```
 
 ## Issues
 Please post issues on GitHub. Before you contact us, please check:
