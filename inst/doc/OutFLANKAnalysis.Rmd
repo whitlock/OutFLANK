@@ -85,19 +85,22 @@ abline(0,1)
 
 Note how uncorrected FST is always larger than corrected FST.
 
-## Data prep: prune SNPs for LD or use a random subset of SNPs
+## Data prep: decide which SNPs to use for calibrating the null distribution of Fst
 
-* Another good practice using a set of SNPs from the genome that is random or that is pruned for linkage disequilibrium (LD) to calculate mean FST (`FSTbar`) and the degrees of freedom on the chi-square distribution (`df`). We have found (with real and simulated whole-genome data) that non-random representation of loci (such as from regions in which many loci display the same signal, such as in regions of low recombination or in regions of extensive sweep signals) can cause the FST distribution to no longer follow the chi-squared expectation. 
+Another good practice using a set of SNPs from the genome that are random and quasi-independent to calculate mean FST (`FSTbar`) and the degrees of freedom on the chi-square distribution (`df`). We use the term "quasi-independent" because SNPs located within the same genome can never be truly independent due to shared evolutionary history, but we mean a set of SNPs that are not in linkage disequilbrium due to physical linkage in the genome.
+We have found (with real and simulated whole-genome data) that non-independent representation of loci (such as from regions in which many loci display the same signal, such as in regions of low recombination or in regions of extensive sweep signals) can cause the FST distribution to no longer follow the chi-squared expectation. 
 
-Before doing running the OutFLANK() function to estimate the parameters on the neutral FST distribution, you will want to identify a quasi-random set of SNPs. We have provided the indexes of this quasi-random set of SNPs with the data distributed in the package:
+Before doing running the OutFLANK() function to estimate the parameters on the neutral FST distribution, you will want to identify a quasi-independent set of SNPs to calculate `FSTbar` and `df`. A common way of obtaining these SNPs is to thin for linkage disequilibrium (SNP thinning), which typically moves along a genome in a sliding window and thins SNPs based on linkage disequilibrium with each other. This may be based on a combination of (i) "pruning," which sequentially scans the genome and performs pairwise thinning based on a given threshold of correlation, (ii) "clumping," which may incorporate some information about the importance of SNPs based on summary statistics, and (iii) removing SNPs in long-range LD regions (Prive et al. 2017).
+
+For this vignette, we used the package `bigsnpr` to implement the three types of SNP thinning described above. The indexes of this quasi-independent set of SNPs is provided with the OutFLANK package for this vignette. For information on the code we used to obtain these SNPs and more information on SNP trimming, see the "Bonus" section at the end of the vignette.
+
 
 ```{r}
 data("which_pruned")
 head(which_pruned)
 ```
 
-Our pruned SNP set is a couple thousand SNPs fewer than our full dataset. For information on how we obtained these SNPs, see the "Bonus" section at the end of the vignette.
-
+Note how our thinned SNP set is a couple thousand SNPs fewer than our full dataset. 
 Below, we will illustrate how to use a subset of quasi-independent SNPs to estimate `FSTbar` and `df`, and then how to use these estimates to calculate $P$-values for a much larger set of SNPs.
 
 
@@ -105,7 +108,7 @@ Below, we will illustrate how to use a subset of quasi-independent SNPs to estim
 
 Next, you can run the `OutFLANK()` function to estimate the parameters on the neutral FST distribution.
 ```{r}
-#### Evaluating OutFLANK with pruned data ####
+#### Evaluating OutFLANK with trimmed SNPs ####
 out_trim <- OutFLANK(my_fst[which_pruned,], NumberOfSamples=39, qthreshold = 0.05, Hmin = 0.1)
 str(out_trim)
 head(out_trim$results)
@@ -125,7 +128,7 @@ OutFLANKResultsPlotter(out_trim , withOutliers = TRUE,
 
 ### Also check the P-value histogram:
 
-Here, we plot the "right-tailed" P-values, which means that outliers in the right tail of the FST distribution will have a P-value near zero. Because we ran the algorithm on a pruned set of SNPs, this will remove some of the signal around selected sites. So we expect this histogram to be flat and maybe have a bump near 0 for selected sites. This histogram looks pretty good.
+Here, we plot the "right-tailed" P-values, which means that outliers in the right tail of the FST distribution will have a P-value near zero. Because we ran the algorithm on a trimmed set of SNPs, this will remove some of the signal around selected sites. So we expect this histogram to be flat and maybe have a bump near 0 for selected sites. This histogram looks pretty good.
 ```{r, fig.width=6}
 hist(out_trim$results$pvaluesRightTail)
 ```
@@ -203,16 +206,18 @@ The object "G" is now in OutFLANK format.
 
 DISCLAIMER: Note that this dataset does not include missing data, so this code may not work in all scenarios. Also, NA should be replaced with "9" to work with the functions in the package.
 
-## Bonus: code used to obtain pruned SNPs 
-Here is the code that we used to obtain the pruned SNPs. Note that this code is not run with the vignette. Note also that your chromosome needs to be of class `integer` for this to work. See the `bigsnpr` package for more information.
+## Bonus: code used to obtain trimmed SNPs 
+Here is the code that we used to obtain the trimmed SNPs. Note that this code is not run with the vignette. Note also that your chromosome needs to be of class `integer` for this to work. See the `bigsnpr` package for more information on SNP trimming and how it works with this package (Prive et al. 2017). 
+
+Another common program used for SNP trimming is the PLINK package, and we refer users to the reference for more information (Purcell et al 2007).
 
 ```
 if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigstatsr")}
 library(bigstatsr)
 if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
-library(bigsnpr)   # package for LD pruning
+library(bigsnpr)   # package for SNP trimming
 
-#### LD Pruning ####
+#### SNP trimming ####
 G<-add_code256(big_copy(t(sim1a$G),type="raw"),code=bigsnpr:::CODE_012)
 newpc<-snp_autoSVD(G=G,infos.chr =sim1a$chromosome,infos.pos = sim1a$position)
 which_pruned <- attr(newpc, which="subset") # Indexes of remaining SNPS after pruning
@@ -231,3 +236,10 @@ When you contact us, please:
 
 * tell us that you have done the above four checks of your data
 * give us the data and the code needed to reproduce your error
+
+## References
+
+Privé F, Aschard H, Blum MGB. 2017 Efficient management and analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr. Bioarxiv, doi: http://dx.doi.org/10.1101/190926
+
+Purcell S, Neale B, Todd-Brown K, et al. 2007. PLINK: A Tool Set for Whole-Genome Association and Population-Based Linkage Analyses. The American Journal of Human Genetics 81:559-575. https://doi.org/10.1086/519795
+

@@ -33,7 +33,7 @@ data("which_pruned")
 head(which_pruned)
 
 ## ------------------------------------------------------------------------
-#### Evaluating OutFLANK with pruned data ####
+#### Evaluating OutFLANK with trimmed SNPs ####
 out_trim <- OutFLANK(my_fst[which_pruned,], NumberOfSamples=39, qthreshold = 0.05, Hmin = 0.1)
 str(out_trim)
 head(out_trim$results)
