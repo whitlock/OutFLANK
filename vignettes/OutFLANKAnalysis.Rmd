@@ -1,20 +1,20 @@
 ---
 title: "OutFLANK Vignette"
 author: "Katie Lotterhos"
-date: "2017-11-29"
+date: "2018-04-22"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{OutFLANK Vignette}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
-OutFLANK is an R package that implements the method developed by Whitlock and Lotterhos to use likelihood on a trimmed distribution of FST values to infer the distribution of FST for neutral markers. This distribution is then used to assign q-values to each locus to detect outliers that may be due to spatially heterogeneous selection.
+OutFLANK is an R package that implements the method developed by Whitlock and Lotterhos (2015) to use likelihood on a trimmed distribution of FST values to infer the distribution of FST for neutral markers. This distribution is then used to assign q-values to each locus to detect outliers that may be due to spatially heterogeneous selection.
 
-READ THE pdf README FIRST.
+Before you attempt this vignette, please read the pdf README on github.
 
 This vignette shows some data checks and best practices when using OutFLANK.
 
-The updated version of OutFLANK (v 0.2) correctly removes loci with low heterozygosity in the OutFLANK function. The original version (`OutFLANK_0.1`) did not do this correctly, so please make sure you are using the correct version (use `sessionInfo()` to check). Loci with low H do not follow the assumptions and should be ignored.
+The updated version of OutFLANK (v 0.2) correctly removes loci with low heterozygosity in the OutFLANK function. The original version (`OutFLANK_0.1`) did not do this correctly, so please make sure you are using the correct version (use `sessionInfo()` to check). Loci with low H do not follow the assumptions of OutFLANK and should be ignored.
 
 
 
@@ -27,9 +27,11 @@ library(devtools)
 
 if (!("qvalue" %in% installed.packages())){TODO}
 if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
-#if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} 
+
+#if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} ## will need to UNCOMMENT this link for final .Rmd!
 
 devtools::install_github("whitlock/OutFLANK", ref="development", force=TRUE) # will need to DELETE this link for final .Rmd!
+
 library(OutFLANK)  # outflank package
 library(vcfR)
 ```
@@ -48,7 +50,7 @@ table(sim1a$pop)
 ```
 
 The population was simulated to spatially heterogeneous selection, and 1000 individuals were collected from across 39 populations (`sim1a$pop`) spanning the environmental gradient (`sim1a$envi`). 
-The dataset consists of 5,940 SNPs simulated across 6 linkage groups. Each linkage group was 40,000 bases long. Quantitative trait nucleotides (QTNs) were allowed to evolve in the 1st and 3rd linkage groups and contributed additively to a trait under stabilizing selection. The 2nd and 6th linkage group had regions of low recombination. The 4th linkage group was neutral. The 5th linkage group had a selected sweep that occure so far in the past, that it didn't leave any characteristic signature in the genome.
+The dataset consists of 5,940 SNPs simulated across 6 linkage groups. Each linkage group was 40,000 bases long. Quantitative trait nucleotides (QTNs) were allowed to evolve in the 1st and 3rd linkage groups and contributed additively to a trait under stabilizing selection. The 2nd and 6th linkage group had regions of low recombination. The 4th linkage group was neutral. The 5th linkage group had a selected sweep that occured so far in the past that it didn't leave any characteristic signature in the genome.
 
 There are many low heterozygosity loci (e.g., rare alleles) in the dataset, which have not been filtered out.
 
@@ -66,17 +68,17 @@ head(my_fst)
 
 
 ## Data checks: Heterozygosity vs. FST
-Here, you can see how some of the low H loci have high FST. These are all neutral loci in the simulation, and this is it is important to exclude them from the OutFLANK algorithm.
+Here, you can see how some of the low H loci have high FST. These are all neutral loci in the simulation, and it is important to exclude them from the OutFLANK algorithm.
 ```{r, fig.width=6}
 plot(my_fst$He, my_fst$FST)
 ```
 
 ## Data checks: FST vs. FSTNoCorr
 
-* One good practice is to check for loci with small samples sizes (which may result in loci that deviate between `FST` and the uncorrected FST used in the OurFLANK algorithm `FSTNoCorr`). 
 
+To fit the FST distribution to chi-square, OutFLANK requires the FST uncorrected for sample size (`FSTNoCorr`). This is a valid approach as long as all loci have equal sample sizes within populations. The effect of correcting for sample size will make the corrected FST estimate (`FST`) lower than the uncorrected FST estimate (`FSTNoCorr`). Note that all loci deviate between `FST` and  `FSTNoCorr`, but OutFLANK assumes that these deviations are the same for each locus. If a locus has a much lower sample size compared to the rest, it could have a broader error distribution (and therefore incorrectly inferred as an outlier). 
 
-To fit the FST distribution to chi-square, we use the FST uncorrected for sample size (`FSTNoCorr`). This is a valid approach as long as all loci have equal sample sizes within populations. The effect of correcting for sample size will make the corrected FST estimate lower than the uncorrected FST estimate. If a locus has a much lower sample size compared to the rest, it could have a much larger FSTNoCorr than FST (and therefore incorrectly inferred as an outlier). Look for deviations from this relationship in this plot, and remove those loci.
+Look for loci that deviate from the linear relationship in this plot, and remove those loci.
 
 ```{r, fig.width=6}
 plot(my_fst$FST, my_fst$FSTNoCorr)
@@ -133,9 +135,9 @@ Here, we plot the "right-tailed" P-values, which means that outliers in the righ
 hist(out_trim$results$pvaluesRightTail)
 ```
 
-## Using estimated netural mean FST and df to calculate P-values for all loci
+## Using estimated neutral mean FST and df to calculate P-values for all loci
 
-Now that we've estimated neutral mean FST and df to a quasi-independent set of SNPs, we can go back and calculate P-values for all the loci in our dataset. 
+Now that we've estimated neutral mean FST and df to a quasi-independent set of SNPs, we can go back and calculate P-values and q-values for all the loci in our dataset. 
 
 Note that it is important to run this code with the uncorrected FSTs (`FSTNoCorr`) and the uncorrected mean FST (`FSTNoCorrbar`).
 
@@ -204,15 +206,15 @@ table(as.vector(G))
 
 The object "G" is now in OutFLANK format.
 
-DISCLAIMER: Note that this dataset does not include missing data, so this code may not work in all scenarios. Also, NA should be replaced with "9" to work with the functions in the package.
+DISCLAIMER: Note that this dataset does not include missing data, so this code may not work in all scenarios. Also, NA should be replaced with "9" to work with the functions in the OutFLANK package.
 
 ## Bonus: code used to obtain trimmed SNPs 
-Here is the code that we used to obtain the trimmed SNPs. Note that this code is not run with the vignette. Note also that your chromosome needs to be of class `integer` for this to work. See the `bigsnpr` package for more information on SNP trimming and how it works with this package (Prive et al. 2017). 
+Here is the code that we used to obtain the trimmed SNPs. Note that this code is not run with this vignette. Note also that your chromosome needs to be of class `integer` for this to work. See the `bigsnpr` package for more information on SNP trimming and how it works with this package (Prive et al. 2017). If you have difficulty loading either of these packages, please contact the developers.
 
 Another common program used for SNP trimming is the PLINK package, and we refer users to the reference for more information (Purcell et al 2007).
 
 ```
-if (!("bigstatsr" %in% installed.packages())){devtools::install_github("privefl/bigstatsr")}
+if (!("bigstatsr" %in% installed.packages())){install.packages("bigstatsr")}
 library(bigstatsr)
 if (!("bigsnpr" %in% installed.packages())){devtools::install_github("privefl/bigsnpr")}
 library(bigsnpr)   # package for SNP trimming
