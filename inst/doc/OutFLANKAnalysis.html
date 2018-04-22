@@ -95,7 +95,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;whitlock
 <pre><code>## Installing OutFLANK</code></pre>
 <pre><code>## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
 ##   --no-environ --no-save --no-restore --quiet CMD INSTALL  \
-##   '/private/var/folders/8p/y5ntdql96r1gvyxz7jc99vzc0000gn/T/RtmpHykcpN/devtools874910ac13ff/whitlock-OutFLANK-cf0e0f3'  \
+##   '/private/var/folders/8p/y5ntdql96r1gvyxz7jc99vzc0000gn/T/RtmpHykcpN/devtools87493aa305f1/whitlock-OutFLANK-5b9143a'  \
 ##   --library='/Library/Frameworks/R.framework/Versions/3.4/Resources/library'  \
 ##   --install-tests</code></pre>
 <pre><code>## </code></pre>
@@ -134,7 +134,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;whitlock
 </div>
 <div id="calculate-fst-on-the-data" class="section level2">
 <h2>Calculate FST on the data</h2>
-<p>The object <code>sim1a$G</code> contains the genotypes (in rows) for the 1000 individuals (in columns). See the OutFLANK readme for information on the data format. Some users have had errors because they have not coded missing data correctly. Here, we have to transpose the G matrix to get it into OutFLANK format.</p>
+<p>The object <code>sim1a$G</code> contains the genotypes (in rows) for the 1000 individuals (in columns). See the OutFLANK readme for information on the data format. Some users have had errors because they have not coded missing data correctly. Here, we have to transpose the genotype matrix (<code>sim1a$G</code>) to get it into OutFLANK format.</p>
 <p>First, we calculate FST on all the loci in our dataset.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_fst &lt;-<span class="st"> </span><span class="kw">MakeDiploidFSTMat</span>(<span class="kw">t</span>(sim1a$G), <span class="dt">locusNames =</span> sim1a$position, <span class="dt">popNames =</span> sim1a$pop)</code></pre></div>
 <pre><code>## Calculating FSTs, may take a few minutes...</code></pre>
@@ -376,11 +376,13 @@ length(which_pruned)</code></pre>
 <li>tell us that you have done the above four checks of your data</li>
 <li>give us the data and the code needed to reproduce your error</li>
 </ul>
+<p>Note that not all datasets may have FST outliers. Failure to find outliers could mean that the OutFLANK algorithm is conservative for your data, but it could also mean that none of the loci in your datasets are FST outliers (e.g. are not affected by selection or some other neutral process that would make them deviate significantly from the genome-wide background).</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
 <p>Privé F, Aschard H, Blum MGB. 2017 Efficient management and analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr. Bioarxiv, doi: <a href="http://dx.doi.org/10.1101/190926" class="uri">http://dx.doi.org/10.1101/190926</a></p>
 <p>Purcell S, Neale B, Todd-Brown K, et al. 2007. PLINK: A Tool Set for Whole-Genome Association and Population-Based Linkage Analyses. The American Journal of Human Genetics 81:559-575. <a href="https://doi.org/10.1086/519795" class="uri">https://doi.org/10.1086/519795</a></p>
+<p>Whitlock MC and Lotterhos KE. 2015. Reliable Detection of Loci Responsible for Local Adaptation: Inference of a Null Model through Trimming the Distribution of FST. American Naturalist. 186, no. S1: S24-S36.</p>
 </div>
 
 

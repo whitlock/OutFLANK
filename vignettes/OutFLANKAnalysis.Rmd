@@ -57,7 +57,7 @@ There are many low heterozygosity loci (e.g., rare alleles) in the dataset, whic
 
 ## Calculate FST on the data
 
-The object `sim1a$G` contains the genotypes (in rows) for the 1000 individuals (in columns). See the OutFLANK readme for information on the data format. Some users have had errors because they have not coded missing data correctly. Here, we have to transpose the G matrix to get it into OutFLANK format.
+The object `sim1a$G` contains the genotypes (in rows) for the 1000 individuals (in columns). See the OutFLANK readme for information on the data format. Some users have had errors because they have not coded missing data correctly. Here, we have to transpose the genotype matrix (`sim1a$G`) to get it into OutFLANK format.
 
 First, we calculate FST on all the loci in our dataset.
 
@@ -227,6 +227,7 @@ length(which_pruned)
 ```
 
 ## Issues
+
 Please post issues on GitHub. Before you contact us, please check:
 
 * Missing data is in the correct format
@@ -239,9 +240,13 @@ When you contact us, please:
 * tell us that you have done the above four checks of your data
 * give us the data and the code needed to reproduce your error
 
+
+Note that not all datasets may have FST outliers. Failure to find outliers could mean that the OutFLANK algorithm is conservative for your data, but it could also mean that none of the loci in your datasets are FST outliers (e.g. are not affected by selection or some other neutral process that would make them deviate significantly from the genome-wide background).
+
 ## References
 
 Privé F, Aschard H, Blum MGB. 2017 Efficient management and analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr. Bioarxiv, doi: http://dx.doi.org/10.1101/190926
 
 Purcell S, Neale B, Todd-Brown K, et al. 2007. PLINK: A Tool Set for Whole-Genome Association and Population-Based Linkage Analyses. The American Journal of Human Genetics 81:559-575. https://doi.org/10.1086/519795
 
+Whitlock MC and Lotterhos KE. 2015. Reliable Detection of Loci Responsible for Local Adaptation: Inference of a Null Model through Trimming the Distribution of FST. American Naturalist. 186, no. S1: S24-S36.
