@@ -89,7 +89,7 @@ Note how uncorrected FST is always larger than corrected FST.
 
 ## Data prep: decide which SNPs to use for calibrating the null distribution of Fst
 
-Another good practice using a set of SNPs from the genome that are random and quasi-independent to calculate mean FST (`FSTbar`) and the degrees of freedom on the chi-square distribution (`df`). We use the term "quasi-independent" because SNPs located within the same genome can never be truly independent due to shared evolutionary history, but we mean a set of SNPs that are not in linkage disequilbrium due to physical linkage in the genome.
+Another good practice is to use a set of SNPs from the genome that are random and quasi-independent to calculate mean FST (`FSTbar`) and the degrees of freedom on the chi-square distribution (`df`). We use the term "quasi-independent" because SNPs located within the same genome can never be truly independent due to shared evolutionary history, but we mean a set of SNPs that are not in linkage disequilbrium due to physical linkage in the genome.
 We have found (with real and simulated whole-genome data) that non-independent representation of loci (such as from regions in which many loci display the same signal, such as in regions of low recombination or in regions of extensive sweep signals) can cause the FST distribution to no longer follow the chi-squared expectation. 
 
 Before running the OutFLANK() function to estimate the parameters on the neutral FST distribution, you will want to identify a quasi-independent set of SNPs to calculate `FSTbar` and `df`. A common way of obtaining these SNPs is to thin for linkage disequilibrium (SNP thinning), which typically moves along a genome in a sliding window and thins SNPs based on linkage disequilibrium with each other. This may be based on a combination of (i) "pruning," which sequentially scans the genome and performs pairwise thinning based on a given threshold of correlation, (ii) "clumping," which may incorporate some information about the importance of SNPs based on summary statistics, and (iii) removing SNPs in long-range LD regions (Prive et al. 2017).
@@ -250,3 +250,7 @@ Privé F, Aschard H, Blum MGB. 2017 Efficient management and analysis of large-s
 Purcell S, Neale B, Todd-Brown K, et al. 2007. PLINK: A Tool Set for Whole-Genome Association and Population-Based Linkage Analyses. The American Journal of Human Genetics 81:559-575. https://doi.org/10.1086/519795
 
 Whitlock MC and Lotterhos KE. 2015. Reliable Detection of Loci Responsible for Local Adaptation: Inference of a Null Model through Trimming the Distribution of FST. American Naturalist. 186, no. S1: S24-S36.
+
+```{r}
+sessionInfo()
+```

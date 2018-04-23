@@ -95,7 +95,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;whitlock
 <pre><code>## Installing OutFLANK</code></pre>
 <pre><code>## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
 ##   --no-environ --no-save --no-restore --quiet CMD INSTALL  \
-##   '/private/var/folders/8p/y5ntdql96r1gvyxz7jc99vzc0000gn/T/RtmpHykcpN/devtools87493aa305f1/whitlock-OutFLANK-5b9143a'  \
+##   '/private/var/folders/8p/y5ntdql96r1gvyxz7jc99vzc0000gn/T/RtmpHykcpN/devtools8749127dde92/whitlock-OutFLANK-a594e19'  \
 ##   --library='/Library/Frameworks/R.framework/Versions/3.4/Resources/library'  \
 ##   --install-tests</code></pre>
 <pre><code>## </code></pre>
@@ -171,7 +171,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;whitlock
 </div>
 <div id="data-prep-decide-which-snps-to-use-for-calibrating-the-null-distribution-of-fst" class="section level2">
 <h2>Data prep: decide which SNPs to use for calibrating the null distribution of Fst</h2>
-<p>Another good practice using a set of SNPs from the genome that are random and quasi-independent to calculate mean FST (<code>FSTbar</code>) and the degrees of freedom on the chi-square distribution (<code>df</code>). We use the term “quasi-independent” because SNPs located within the same genome can never be truly independent due to shared evolutionary history, but we mean a set of SNPs that are not in linkage disequilbrium due to physical linkage in the genome. We have found (with real and simulated whole-genome data) that non-independent representation of loci (such as from regions in which many loci display the same signal, such as in regions of low recombination or in regions of extensive sweep signals) can cause the FST distribution to no longer follow the chi-squared expectation.</p>
+<p>Another good practice is to use a set of SNPs from the genome that are random and quasi-independent to calculate mean FST (<code>FSTbar</code>) and the degrees of freedom on the chi-square distribution (<code>df</code>). We use the term “quasi-independent” because SNPs located within the same genome can never be truly independent due to shared evolutionary history, but we mean a set of SNPs that are not in linkage disequilbrium due to physical linkage in the genome. We have found (with real and simulated whole-genome data) that non-independent representation of loci (such as from regions in which many loci display the same signal, such as in regions of low recombination or in regions of extensive sweep signals) can cause the FST distribution to no longer follow the chi-squared expectation.</p>
 <p>Before running the OutFLANK() function to estimate the parameters on the neutral FST distribution, you will want to identify a quasi-independent set of SNPs to calculate <code>FSTbar</code> and <code>df</code>. A common way of obtaining these SNPs is to thin for linkage disequilibrium (SNP thinning), which typically moves along a genome in a sliding window and thins SNPs based on linkage disequilibrium with each other. This may be based on a combination of (i) “pruning,” which sequentially scans the genome and performs pairwise thinning based on a given threshold of correlation, (ii) “clumping,” which may incorporate some information about the importance of SNPs based on summary statistics, and (iii) removing SNPs in long-range LD regions (Prive et al. 2017).</p>
 <p>For this vignette, we used the package <code>bigsnpr</code> to implement the three types of SNP thinning described above. The indexes of this quasi-independent set of SNPs is provided with the OutFLANK package for this vignette. For information on the code we used to obtain these SNPs and more information on SNP trimming, see the “Bonus” section at the end of the vignette.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;which_pruned&quot;</span>)
@@ -383,6 +383,54 @@ length(which_pruned)</code></pre>
 <p>Privé F, Aschard H, Blum MGB. 2017 Efficient management and analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr. Bioarxiv, doi: <a href="http://dx.doi.org/10.1101/190926" class="uri">http://dx.doi.org/10.1101/190926</a></p>
 <p>Purcell S, Neale B, Todd-Brown K, et al. 2007. PLINK: A Tool Set for Whole-Genome Association and Population-Based Linkage Analyses. The American Journal of Human Genetics 81:559-575. <a href="https://doi.org/10.1086/519795" class="uri">https://doi.org/10.1086/519795</a></p>
 <p>Whitlock MC and Lotterhos KE. 2015. Reliable Detection of Loci Responsible for Local Adaptation: Inference of a Null Model through Trimming the Distribution of FST. American Naturalist. 186, no. S1: S24-S36.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
+<pre><code>## R version 3.4.0 (2017-04-21)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS  10.13.4
+## 
+## Matrix products: default
+## BLAS: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] OutFLANK_0.2    bindrcpp_0.2    dbplyr_1.2.0    RSQLite_2.0    
+##  [5] forcats_0.2.0   stringr_1.2.0   dplyr_0.7.4     purrr_0.2.4    
+##  [9] readr_1.1.1     tidyr_0.7.2     tibble_1.3.4    ggplot2_2.2.1  
+## [13] tidyverse_1.2.1 ROCR_1.0-7      gplots_3.0.1    vcfR_1.6.0     
+## [17] devtools_1.13.4 qvalue_2.8.0   
+## 
+## loaded via a namespace (and not attached):
+##  [1] nlme_3.1-131       bitops_1.0-6       lubridate_1.7.1   
+##  [4] bit64_0.9-7        httr_1.3.1         rprojroot_1.3-2   
+##  [7] tools_3.4.0        backports_1.1.2    R6_2.2.2          
+## [10] vegan_2.4-6        KernSmooth_2.23-15 DBI_0.7           
+## [13] lazyeval_0.2.1     mgcv_1.8-22        colorspace_1.3-2  
+## [16] permute_0.9-4      withr_2.1.1        mnormt_1.5-5      
+## [19] bit_1.1-12         curl_3.1           compiler_3.4.0    
+## [22] git2r_0.20.0       cli_1.0.0          rvest_0.3.2       
+## [25] xml2_1.1.1         desc_1.1.1         caTools_1.17.1    
+## [28] scales_0.5.0       psych_1.7.8        commonmark_1.4    
+## [31] digest_0.6.15      foreign_0.8-69     rmarkdown_1.8     
+## [34] pkgconfig_2.0.1    htmltools_0.3.6    rlang_0.1.6       
+## [37] readxl_1.0.0       rstudioapi_0.7     bindr_0.1         
+## [40] jsonlite_1.5       gtools_3.5.0       magrittr_1.5      
+## [43] Matrix_1.2-12      Rcpp_0.12.15       munsell_0.4.3     
+## [46] ape_5.0            stringi_1.1.6      yaml_2.1.16       
+## [49] MASS_7.3-48        plyr_1.8.4         pinfsc50_1.1.0    
+## [52] grid_3.4.0         blob_1.1.0         parallel_3.4.0    
+## [55] gdata_2.18.0       crayon_1.3.4       lattice_0.20-35   
+## [58] haven_1.1.0        splines_3.4.0      hms_0.4.0         
+## [61] knitr_1.18         reshape2_1.4.3     glue_1.2.0        
+## [64] evaluate_0.10.1    modelr_0.1.1       cellranger_1.1.0  
+## [67] gtable_0.2.0       assertthat_0.2.0   broom_0.4.3       
+## [70] roxygen2_6.0.1     viridisLite_0.2.0  memoise_1.1.0     
+## [73] cluster_2.0.6</code></pre>
 </div>
 
 
