@@ -16,3 +16,4 @@ The vignette can be installed by typing:
 
 This will open a web browser, and click on the `html` link.
 
+You can also view the vignette on the web at https://htmlpreview.github.io/?https://github.com/whitlock/OutFLANK/blob/master/inst/doc/OutFLANKAnalysis.html
