@@ -83,7 +83,7 @@ plot(my_fst$FST, my_fst$FSTNoCorr)
 abline(0,1)
 ```
 
-Note how uncorrected FST is always larger than corrected FST.
+Note how uncorrected FST is always larger than corrected FST. In this plot, no loci deviate from the linear relationship (because they were all genotyped in the same number of individuals).
 
 ## Data prep: decide which SNPs to use for calibrating the null distribution of Fst
 
