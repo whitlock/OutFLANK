@@ -5,9 +5,7 @@ library(devtools)
 if (!("qvalue" %in% installed.packages())){TODO}
 if (!("vcfR" %in% installed.packages())){install.packages("vcfR")} 
 
-#if (!("OutFLANK" %in% installed.packages())){devtools::install_github("whitlock/OutFLANK")} ## will need to UNCOMMENT this link for final .Rmd!
-
-devtools::install_github("whitlock/OutFLANK", ref="development", force=TRUE) # will need to DELETE this link for final .Rmd!
+devtools::install_github("whitlock/OutFLANK")
 
 library(OutFLANK)  # outflank package
 library(vcfR)
