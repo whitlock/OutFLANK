@@ -2,6 +2,8 @@
 #OutFLANK:  An Fst outlier approach by Mike Whitlock and Katie Lotterhos, University of British Columbia.
 #Development supported by AdapTree, Genome Canada, Genome BC, and an NSERC Discovery Grant to MCW.
 
+#test
+
 ########################How to use OutFLANK##################
 
 #This method looks for Fst outliers from a list of Fst's for different loci. It
