@@ -82,9 +82,16 @@ MakeDiploidFSTMat = function(SNPmat,locusNames,popNames){
   popname <- unlist(popNames)
   
   ### Check that SNPmat has appropriate values (0, 1, 2, or 9, only)
+  # snplevs <- levels(as.factor(unlist(SNPmat)))
+  # ls <- paste(snplevs, collapse="")
+  # if(ls!="012" & ls!="0129"){print("Error: Your snp matrix does not have 0,1, and 2"); break}
+  
+  # Next 5 lines from Áke Jarl Láruson
   snplevs <- levels(as.factor(unlist(SNPmat)))
-  ls <- paste(snplevs, collapse="")
-  if(ls!="012" & ls!="0129"){print("Error: Your snp matrix does not have 0,1, and 2"); break}
+  if(any(!(snplevs%in%c(0,1,2,9)))==TRUE) {
+    print("Error: Your snp matrix has a character other than 0,1,2 or 9")
+    break
+  }
   
   ### Checking that locusNames and popNames have the same lengths as the columns and rows of SNPmat
   if(dim(SNPmat)[1]!=length(popname) ){

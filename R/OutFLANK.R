@@ -70,8 +70,15 @@
 #Download the biocLite package at first use. On subsequent uses, run library(qvalue) before 
 #using functions in the rest of this file.
 
-#source("http://bioconductor.org/biocLite.R")
-#biocLite("qvalue")
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#   install.packages("BiocManager")
+# BiocManager::install()
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#   install.packages("BiocManager")
+# 
+# BiocManager::install("qvalue")
+
+
 library(qvalue)
 #source("FST functions.R")
 
