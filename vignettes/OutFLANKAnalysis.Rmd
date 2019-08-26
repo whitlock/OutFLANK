@@ -16,7 +16,8 @@ This vignette shows some data checks and best practices when using OutFLANK.
 
 The updated version of OutFLANK (v 0.2) correctly removes loci with low heterozygosity in the OutFLANK function. The original version (`OutFLANK_0.1`) did not do this correctly, so please make sure you are using the correct version (use `sessionInfo()` to check). Loci with low H do not follow the assumptions of OutFLANK and should be ignored.
 
-
+## Note on missing data ##
+Note that this vignette uses simulated data and not real data. If you have missing data, please read the pdf README as it has specific instructions on how to code missing data.
 
 ## Packages and Data ##
 These packages are necessary for running this vignette.
