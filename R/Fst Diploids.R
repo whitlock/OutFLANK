@@ -82,18 +82,22 @@ MakeDiploidFSTMat = function(SNPmat,locusNames,popNames){
   popname <- unlist(popNames)
   
   ### Check that SNPmat has appropriate values (0, 1, 2, or 9, only)
-  snplevs <- levels(as.factor(unlist(SNPmat)))
-  ls <- paste(snplevs, collapse="")
-  if(ls!="012" & ls!="0129"){print("Error: Your snp matrix does not have 0,1, and 2"); break}
+  if (is.data.frame(SNPmat)) SNPmat <- as.matrix(SNPmat)
+  if (!is.matrix(SNPmat) || !is.numeric(SNPmat) ||
+      any(dim(SNPmat) == 0L) || anyNA(SNPmat) ||
+      any(!SNPmat %in% c(0, 1, 2, 9))) {
+    stop("SNPmat must be a nonempty numeric matrix containing 0, 1, 2 or 9 (missing).",
+         call. = FALSE)
+  }
   
   ### Checking that locusNames and popNames have the same lengths as the columns and rows of SNPmat
   if(dim(SNPmat)[1]!=length(popname) ){
-    print("Error: your population names do not match your SNP matrix")
-    break}
+    stop("popNames must have one entry per row (individual) of SNPmat.",
+         call. = FALSE)}
   
   if(dim(SNPmat)[2]!=length(locusname)){
-    print("Error:  your locus names do not match your SNP matrix")
-    break}
+    stop("locusNames must have one entry per column (locus) of SNPmat.",
+         call. = FALSE)}
   
   writeLines("Calculating FSTs, may take a few minutes...")
   
