@@ -148,6 +148,7 @@ library(qvalue)
 #'@export
 #'  
 OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, Hmin=0.1, NumberOfSamples, qthreshold=0.05){
+  # Fix for issue #29: keep untested NA flags out of logical conditions.
   
   #
   #
@@ -208,24 +209,32 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
     #### mark all negative FSTs as outliers if lowest nonneg FST is outlier
     #### (because negative Fst estimates can't be evaluated through the
     #### chi-square approach on their own)
-    if(any(workingDataFrame$OutlierFlag[workingDataFrame$FSTNoCorr<LowTrimPoint])) workingDataFrame$OutlierFlag[workingDataFrame$FSTNoCorr<0]=TRUE
+    lowTailFlags <- workingDataFrame$OutlierFlag[workingDataFrame$FSTNoCorr < LowTrimPoint]
+    if(any(lowTailFlags %in% TRUE)) {
+      workingDataFrame$OutlierFlag[workingDataFrame$FSTNoCorr < 0] <- TRUE
+    }
     
     ####Any loci previously marked as $OutlierFlag=TRUE remain so, even if the new iteration doesn't flag them as outliers
     #     workingDataFrame$OutlierFlag=!as.logical((!workingDataFrame$OutlierFlag)*(!oldOutlierFlag))
     
     #Resetting neutral list, and checking whether the outlier list has stabilized
-    putativeNeutralListTemp=ifelse((!workingDataFrame$OutlierFlag),TRUE,FALSE)
+    # Only explicitly tested, non-outlier loci belong to the neutral set.
+    # Untested loci carry NA flags by design and must not enter the loop.
+    putativeNeutralListTemp <- !is.na(workingDataFrame$OutlierFlag) &
+      !workingDataFrame$OutlierFlag
     if(sum(putativeNeutralListTemp)==0) {writeLines("No loci in neutral list..."); return("FAIL")}
     
     if(identical(oldOutlierFlag,workingDataFrame$OutlierFlag)) keepGoing=FALSE
     
     ######if all in trimmed get IDed as outlier - return to user with warning
-    if(all(workingDataFrame$OutlierFlag[workingDataFrame$FSTNoCorr<LowTrimPoint])){
+    lowTailFlags <- workingDataFrame$OutlierFlag[workingDataFrame$FSTNoCorr < LowTrimPoint]
+    if(length(lowTailFlags) > 0L && all(lowTailFlags %in% TRUE)){
       writeLines("All loci with Fst below the lower (lefthand) trim point were marked as outliers. Re-run with larger LeftTrimFraction or smaller qthreshold.")
       return(0)
     }
     
-    if(all(workingDataFrame$OutlierFlag[workingDataFrame$FSTNoCorr>HighTrimPoint])){
+    highTailFlags <- workingDataFrame$OutlierFlag[workingDataFrame$FSTNoCorr > HighTrimPoint]
+    if(length(highTailFlags) > 0L && all(highTailFlags %in% TRUE)){
       writeLines("All loci with Fst above the upper (righthand) trim point were marked as outliers. Re-run with smaller RightTrimFraction or smaller qthreshold.")
       return(0)
     }
@@ -237,8 +246,10 @@ OutFLANK=function(FstDataFrame, LeftTrimFraction=0.05, RightTrimFraction=0.05, H
   
   if(count>19) writeLines("Loop iteration limit exceeded.")
   
-  numberLowFstOutliers=sum(workingDataFrame$OutlierFlag[(workingDataFrame$FSTNoCorr<LowTrimPoint)])
-  numberHighFstOutliers=sum(workingDataFrame$OutlierFlag[(workingDataFrame$FSTNoCorr>HighTrimPoint)])
+  numberLowFstOutliers=sum(workingDataFrame$OutlierFlag[
+    workingDataFrame$FSTNoCorr < LowTrimPoint] %in% TRUE)
+  numberHighFstOutliers=sum(workingDataFrame$OutlierFlag[
+    workingDataFrame$FSTNoCorr > HighTrimPoint] %in% TRUE)
   
   FSTbar=fstBarCalculator(workingDataFrame[putativeNeutralListTemp,])  
   
@@ -425,7 +436,6 @@ pTwoSidedFromChiSq=function(x,df){
   pOneSided=pchisq(x,df)
   ifelse(pOneSided>.5,(1-pOneSided)*2,pOneSided*2)
 }
-
 
 
 
