@@ -145,7 +145,7 @@ P1 <- pOutlierFinderChiSqNoCorr(my_fst, Fstbar = out_trim$FSTNoCorrbar,
                                    dfInferred = out_trim$dfInferred, qthreshold = 0.05, Hmin=0.1)
 head(P1)
 tail(P1)
-# notice how the output is ordered differently
+
 
 my_out <- P1$OutlierFlag==TRUE
 plot(P1$He, P1$FST, pch=19, col=rgb(0,0,0,0.1))
@@ -159,6 +159,12 @@ hist(P1$pvaluesRightTail)
 In the P-value histogram, you can see the "bump" near 0. This occurs now because some of these loci were removed by the LD trimming.
 
 Because of LD, we don't really expect all the outlier loci located within a few base pairs of each other to all be causal. 
+
+It's important to note that the output of `P1` is not in the original order (which can be important for relating your calculated values back to an original data frame).  To reorder `P1`, simply run the following code:
+
+```{r}
+P1 <- P1[order(as.numeric(rownames(P1))),,drop=FALSE]
+```
 
 ## Highlight outliers on Manhattan Plot
 
