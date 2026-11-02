@@ -64,12 +64,14 @@ OutFLANKResultsPlotter = function(OFoutput,withOutliers = TRUE, NoCorr= TRUE, Hm
 
 FstDistPlotter = function(df, FSTlist, FSTbar, binwidth=0.005,titletext=NULL){
   xPlotUpperBound=ceiling(max(FSTlist)*100)/100
-  breakslist=seq(0,xPlotUpperBound+binwidth,by=binwidth)
+  # Corrected FST estimates may be negative; retain them in the histogram.
+  xPlotLowerBound=min(0, floor(min(FSTlist)/binwidth)*binwidth)
+  breakslist=seq(xPlotLowerBound,xPlotUpperBound+binwidth,by=binwidth)
   breaks = length(breakslist)
   
   x = breakslist
   y=rep(0,length(x))
-  for(i in 1:breaks) y[i] = pchisq(((i-.5)*binwidth)/FSTbar*df , df=df) - pchisq((((i-1.5)*binwidth))/FSTbar*df , df=df)
+  for(i in 1:breaks) y[i] = pchisq((x[i]+.5*binwidth)/FSTbar*df , df=df) - pchisq((x[i]-.5*binwidth)/FSTbar*df , df=df)
   y=length(FSTlist)*y
   
   hist(FSTlist,col="darkgoldenrod1", breaks=breakslist, prob=F, xlab="Fst",  main=titletext)
@@ -152,4 +154,3 @@ OutFLANKBadCurvePlotter = function(badDF,OFoutput,withOutliers = TRUE, NoCorr= T
   FstDistPlotterAddBadCurve(badDF, FSTlist  = flist,  FSTbar = fbar, binwidth,RightZoomFraction)
   
 }
-
