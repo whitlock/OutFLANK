@@ -121,6 +121,13 @@ getFSTs_diploids = function(popNameList, SNPDataColumn){
   popnames=unlist(as.character(popNameList))
   popNameTemp=popnames[which(SNPDataColumn!=9)]
   snpDataTemp=SNPDataColumn[SNPDataColumn!=9]
+
+  # A locus must be observed in at least two populations to estimate FST.
+  # Population-specific missingness can otherwise make s2 undefined.
+  if(length(snpDataTemp) == 0L || length(unique(popNameTemp)) < 2L){
+    return(list(He=NA, FST=NA, T1=NA, T2=NA, FSTNoCorr=NA,
+                T1NoCorr=NA, T2NoCorr=NA, meanAlleleFreq=NA))
+  }
   
   HetCounts <- tapply(snpDataTemp, list(popNameTemp,snpDataTemp), length)
   HetCounts[is.na(HetCounts)] = 0
