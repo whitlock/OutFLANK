@@ -1,4 +1,4 @@
-OutFLANK v 0.2
+OutFLANK v 0.3
 ========
 
 
@@ -7,6 +7,7 @@ A procedure to find Fst outliers based on an inferred distribution of neutral Fs
 
 Version 0.2 was released in November 2017. This version fixes a bug in the OutFLANK algorithm that failed to correctly remove low heterozygosity loci when calculating neutral mean FST and df.
 
+Version 0.3 was released in November 2026. This version fixes several bugs, including preserving locus statistics when population allele frequencies are equal, plotting negative values on histograms, implementation of safeguards, fixing missing value flags, fixing the allele frequency convention, validating qvalue calibration, and handling other unique data scenarios.  The OutFLANK authors are grateful to Thierry Gosselin for several pull requests that addressed these issues with the package.
 
 First, read the description of how to use OutFLANK in "OutFLANK readme.pdf" available at github.com/whitlock/OutFLANK.
 
