@@ -330,10 +330,35 @@ pOutlierFinderChiSqNoCorr=function(DataList, Fstbar, dfInferred, qthreshold=0.05
   DataListOthers$OutlierFlag = rep(NA,numOthers)
   
   #Calculating p values and q-values for loci with high enough He and postive Fst
+  if(length(DataListGood$FSTNoCorr) < 2L) {
+    stop("OutFLANK cannot estimate q-values: fewer than two eligible loci remain after filtering.", call. = FALSE)
+  }
+  if(length(Fstbar) != 1L || !is.finite(Fstbar) || Fstbar <= 0 ||
+     length(dfInferred) != 1L || !is.finite(dfInferred) || dfInferred <= 0) {
+    stop(paste0(
+      "OutFLANK cannot estimate q-values: invalid neutral calibration (",
+      "FSTbar=", format(Fstbar), ", dfInferred=", format(dfInferred), ")."),
+      call. = FALSE)
+  }
   pList = pTwoSidedFromChiSq(DataListGood$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
   pListRightTail = 1-pchisq(DataListGood$FSTNoCorr*(dfInferred)/Fstbar,dfInferred)
+  if(any(!is.finite(pListRightTail)) || any(pListRightTail < 0 | pListRightTail > 1)) {
+    stop(paste0(
+      "OutFLANK cannot estimate q-values: non-finite or invalid p-values were generated for ",
+      sum(!is.finite(pListRightTail)), " of ", length(pListRightTail),
+      " eligible loci."), call. = FALSE)
+  }
   
-  qtemp=qvalue(pListRightTail,fdr.level=qthreshold,pi0.method="bootstrap")
+  qtemp <- tryCatch(
+    qvalue(pListRightTail, fdr.level = qthreshold, pi0.method = "bootstrap"),
+    error = function(error) {
+      stop(paste0(
+        "OutFLANK cannot estimate q-values for ", length(pListRightTail),
+        " eligible loci (FSTbar=", format(Fstbar), ", dfInferred=",
+        format(dfInferred), "). qvalue reported: ", conditionMessage(error)),
+        call. = FALSE)
+    }
+  )
   #Note:  Using the bootstrap method here seems OK, but if this causes problems remove the pi0.method="bootstrap" in the previous line to revert to the default.
   
   DataListGood$pvalues = pList
@@ -436,6 +461,4 @@ pTwoSidedFromChiSq=function(x,df){
   pOneSided=pchisq(x,df)
   ifelse(pOneSided>.5,(1-pOneSided)*2,pOneSided*2)
 }
-
-
 

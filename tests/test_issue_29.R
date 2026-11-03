@@ -7,6 +7,11 @@ if (requireNamespace("qvalue", quietly = TRUE)) {
   source("R/Likelihood functions for OutFLANK.R")
   source("R/OutFLANK.R")
 
+  # Keep this regression test focused on NA-flag handling, not qvalue fitting.
+  qvalue <- function(p, fdr.level = 0.05, pi0.method = "bootstrap") {
+    list(qvalues = rep(1, length(p)), significant = rep(FALSE, length(p)))
+  }
+
   set.seed(29)
   n <- 100L
   fst <- c(-0.02, -0.01, runif(n - 2L, 0.05, 0.25))
