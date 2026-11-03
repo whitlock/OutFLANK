@@ -49,9 +49,20 @@ negLLdfFstTrim=function(Fst, dfInferred, Fstbar, LowTrimPoint, HighTrimPoint){
   
   df=dfInferred
   
-  1/(2*Fstbar)*(df * Fst +df * Fstbar * log(2) - df * Fstbar *log(df)-(df-2)*Fstbar * log(Fst)+df * Fstbar * log(Fstbar) + 2*Fstbar * log(-IncompleteGammaFunction(df/2,df*HighTrimPoint/(2*Fstbar))+IncompleteGammaFunction(df/2,df*LowTrimPoint/(2*Fstbar))))
+  # Equivalent truncated chi-squared density, evaluated on the log scale.
+  # Choose the tail avoiding subtraction of probabilities close to one.
+  lo <- LowTrimPoint * df / Fstbar
+  hi <- HighTrimPoint * df / Fstbar
+  if (pchisq(lo, df) > 0.5) {
+    log.large <- pchisq(lo, df, lower.tail = FALSE, log.p = TRUE)
+    log.small <- pchisq(hi, df, lower.tail = FALSE, log.p = TRUE)
+  } else {
+    log.large <- pchisq(hi, df, log.p = TRUE)
+    log.small <- pchisq(lo, df, log.p = TRUE)
+  }
+  log.mass <- log.large + log(-expm1(log.small - log.large))
+  -dchisq(Fst * df / Fstbar, df, log = TRUE) - log(df / Fstbar) + log.mass
 }
-
 
 
 
