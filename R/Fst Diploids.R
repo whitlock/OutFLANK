@@ -30,7 +30,9 @@ WC_FST_Diploids_2Alleles<-function(Sample_Mat){
   n_pops = nrow(Sample_Mat) #r
   r = n_pops
   n_c = (n_pops*n_ave - sum(sample_sizes^2)/(n_pops*n_ave))/(n_pops-1)
-  p_freqs = (Sample_Mat[,1] + Sample_Mat[,2]/2) /sample_sizes
+  # Sample_Mat columns are genotype 0, 1, and 2 counts.  The input
+  # convention defines the focal allele as the allele counted by genotype 2.
+  p_freqs = (Sample_Mat[,3] + Sample_Mat[,2]/2) / sample_sizes
   p_ave = sum(sample_sizes*p_freqs)/(n_ave*n_pops)
   
   s2 = sum(sample_sizes*(p_freqs - p_ave)^2)/((n_pops-1)*n_ave)
